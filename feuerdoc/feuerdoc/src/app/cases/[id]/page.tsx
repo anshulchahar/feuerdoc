@@ -136,7 +136,7 @@ export default function CaseDetailPage() {
       // Prepare data for Gemini API
       // This is a simplified representation. You'll need to fetch initial report content.
       // For now, we'll just send the path and additional notes.
-      const initialReportContent = `Initial Report Path: ${caseData.initialReportPath}. Content needs to be fetched and processed.`; // Placeholder
+      const initialReportContent = `Initial Report Path: ${caseData.initial_report_path}. Content needs to be fetched and processed.`; // Placeholder
       let audioTranscript = '';
       if (audioNote) {
         // In a real app, you would send audioNote to a speech-to-text API
@@ -249,7 +249,7 @@ Recommendations: [e.g., Further investigation by arson team, safety recommendati
           
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-gray-200 mb-2">Initial Contact Report</h3>
-            {caseData.initialReportPath ? (
+            {caseData.initial_report_path ? (
               <a 
                 href={initialReportUrl} 
                 target="_blank" 
