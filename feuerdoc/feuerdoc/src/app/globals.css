@@ -46,7 +46,4 @@ body {
   .border-fire-primary {
     border-color: var(--fire-red-primary);
   }
-  .shadow-fire {
-    box-shadow: 0 0 15px 5px rgba(255, 69, 0, 0.5); /* Example firey shadow */
-  }
 }

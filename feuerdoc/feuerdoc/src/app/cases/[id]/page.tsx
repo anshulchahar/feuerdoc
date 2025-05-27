@@ -147,7 +147,7 @@ const AudioRecorder: React.FC<{ onRecordingComplete: (audioBlob: Blob) => void }
   };
 
   return (
-    <div className="my-4 p-4 border border-gray-700 rounded-lg bg-gray-800">
+    <div className="my-4 p-4 border border-gray-800 rounded-lg bg-gray-950">
       <h3 className="text-lg font-semibold text-gray-200 mb-2">Record Field Notes (Audio)</h3>
       
       {/* Recording Controls */}
@@ -178,11 +178,11 @@ const AudioRecorder: React.FC<{ onRecordingComplete: (audioBlob: Blob) => void }
       {/* Recorded Audio List */}
       {recordings.length > 0 && (
         <div className="space-y-2">
-          <h4 className="text-md font-medium text-gray-300 border-b border-gray-600 pb-2">
+          <h4 className="text-md font-medium text-gray-300 border-b border-gray-700 pb-2">
             Recorded Audio ({recordings.length})
           </h4>
           {recordings.map((recording) => (
-            <div key={recording.id} className="flex items-center justify-between bg-gray-700 p-3 rounded-md">
+            <div key={recording.id} className="flex items-center justify-between bg-gray-900 p-3 rounded-md">
               <div className="flex items-center gap-3 flex-1">
                 <button
                   onClick={() => 
@@ -398,7 +398,7 @@ Recommendations: [e.g., Further investigation by arson team, safety recommendati
 
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto">
-      <div className="mb-6 pb-4 border-b border-gray-700">
+      <div className="mb-6 pb-4 border-b border-gray-800">
         <h1 className="text-3xl md:text-4xl font-bold text-fire-primary mb-2">{caseData.title}</h1>
         <p className="text-lg text-gray-400">Location: {caseData.location}</p>
         <p className="text-sm text-gray-500">Status: <span className={`font-semibold ${caseData.status === 'Completed' ? 'text-green-400' : 'text-yellow-400'}`}>{caseData.status}</span></p>
@@ -408,7 +408,7 @@ Recommendations: [e.g., Further investigation by arson team, safety recommendati
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* Section 1: Initial Report & Inputs */}
-        <div className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700">
+        <div className="bg-gray-950 p-6 rounded-lg shadow-lg border border-gray-800">
           <h2 className="text-2xl font-semibold text-gray-100 mb-4">Case Inputs</h2>
           
           <div className="mb-6">
@@ -438,7 +438,7 @@ Recommendations: [e.g., Further investigation by arson team, safety recommendati
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setAdditionalNotes(e.target.value)}
               rows={5}
               placeholder="Enter any additional observations, actions, or notes..."
-              className="w-full p-3 bg-gray-700 border border-gray-600 rounded-md focus:ring-fire-primary focus:border-fire-primary text-gray-200 placeholder-gray-500"
+              className="w-full p-3 bg-gray-900 border border-gray-700 rounded-md focus:ring-fire-primary focus:border-fire-primary text-gray-200 placeholder-gray-500"
             />
           </div>
 
@@ -453,14 +453,14 @@ Recommendations: [e.g., Further investigation by arson team, safety recommendati
           <button
             onClick={handleGenerateReport}
             disabled={isGeneratingReport || !caseData}
-            className="w-full mt-4 bg-fire-primary hover:bg-fire-secondary text-white font-bold py-3 px-4 rounded-md transition-colors disabled:opacity-60 disabled:cursor-not-allowed shadow-fire"
+            className="w-full mt-4 bg-fire-primary hover:bg-fire-secondary text-white font-bold py-3 px-4 rounded-md transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isGeneratingReport ? 'Generating Report...' : 'Generate Final Report (AI)'}
           </button>
         </div>
 
         {/* Section 2: Final Report Display & Edit */}
-        <div className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700">
+        <div className="bg-gray-950 p-6 rounded-lg shadow-lg border border-gray-800">
           <h2 className="text-2xl font-semibold text-gray-100 mb-4">Final Report</h2>
           {finalReport !== null ? (
             <div>
@@ -469,7 +469,7 @@ Recommendations: [e.g., Further investigation by arson team, safety recommendati
                 value={finalReport} // Or editedReport if using a separate state for edits
                 onChange={(e) => setFinalReport(e.target.value)} // Or setEditedReport
                 rows={15}
-                className="w-full p-3 bg-gray-700 border border-gray-600 rounded-md focus:ring-fire-primary focus:border-fire-primary text-gray-200 mb-4 h-96 resize-y"
+                className="w-full p-3 bg-gray-900 border border-gray-700 rounded-md focus:ring-fire-primary focus:border-fire-primary text-gray-200 mb-4 h-96 resize-y"
                 placeholder="Final report will appear here..."
               />
               {/* <ReactQuill 

@@ -55,16 +55,16 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <aside className="w-72 bg-gray-900 p-5 border-r border-gray-700 flex flex-col h-screen shadow-lg">
+    <aside className="w-72 bg-gray-950 p-5 border-r border-gray-800 flex flex-col h-screen shadow-lg">
       <div className="mb-10">
         <Link href="/" className="text-3xl font-bold text-fire-primary hover:text-fire-secondary transition-colors">
           FeuerDoc
         </Link>
       </div>
-      <nav className="flex-grow overflow-y-auto space-y-2 pr-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
+      <nav className="flex-grow overflow-y-auto space-y-2 pr-2 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-gray-900">
         <Link 
           href="/"
-          className={`block py-2 px-3 rounded-md text-gray-300 hover:bg-gray-700 hover:text-white transition-colors ${pathname === '/' ? 'bg-gray-700 text-white' : ''}`}
+          className={`block py-2 px-3 rounded-md text-gray-300 hover:bg-gray-800 hover:text-white transition-colors ${pathname === '/' ? 'bg-gray-800 text-white' : ''}`}
         >
           Dashboard
         </Link>
@@ -81,7 +81,7 @@ const Sidebar = () => {
                 <li key={caseItem.id}>
                   <Link 
                     href={`/cases/${caseItem.id}`}
-                    className={`block py-2 px-3 rounded-md text-sm text-gray-400 hover:bg-gray-700 hover:text-white truncate transition-colors ${pathname === `/cases/${caseItem.id}` ? 'bg-gray-700 text-white' : ''}`}
+                    className={`block py-2 px-3 rounded-md text-sm text-gray-400 hover:bg-gray-800 hover:text-white truncate transition-colors ${pathname === `/cases/${caseItem.id}` ? 'bg-gray-800 text-white' : ''}`}
                     title={caseItem.title}
                   >
                     {caseItem.title}
@@ -93,7 +93,7 @@ const Sidebar = () => {
         </div>
         {/* Add other navigation items here */}
       </nav>
-      <div className="mt-auto pt-4 border-t border-gray-700">
+      <div className="mt-auto pt-4 border-t border-gray-800">
         {/* User profile/logout can go here */}
         <p className="text-xs text-gray-500 text-center">© {new Date().getFullYear()} FeuerDoc</p>
       </div>
