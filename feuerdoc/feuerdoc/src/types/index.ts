@@ -2,12 +2,12 @@ export interface Case {
   id: string;
   title: string;
   location: string;
-  initialReportPath: string; // Path to the uploaded initial report in Supabase Storage
-  finalReportContent?: string;
-  createdAt: string;
-  updatedAt: string;
+  initial_report_path: string; // Path to the uploaded initial report in Supabase Storage
+  final_report_content?: string;
+  created_at: string;
+  updated_at: string;
   status: 'Open' | 'InProgress' | 'Completed' | 'Closed';
-  userId: string;
+  user_id: string;
 }
 
 export interface UserProfile {

@@ -23,7 +23,7 @@ const Sidebar = () => {
       const { data, error } = await supabase
         .from('cases')
         .select('id, title')
-        .order('createdAt', { ascending: false });
+        .order('created_at', { ascending: false }); // Corrected to snake_case
 
       if (error) {
         console.error('Error fetching cases for sidebar:', error);

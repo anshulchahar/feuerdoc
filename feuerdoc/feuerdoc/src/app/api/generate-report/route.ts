@@ -57,7 +57,7 @@ export async function POST(request: Request) {
     // This provides a baseline even if the user doesn't explicitly save later.
     const { error: updateError } = await supabase
       .from('cases')
-      .update({ finalReportContent: generatedReport, status: 'InProgress' })
+      .update({ final_report_content: generatedReport, status: 'InProgress' }) // Corrected to snake_case
       .eq('id', caseId);
 
     if (updateError) {

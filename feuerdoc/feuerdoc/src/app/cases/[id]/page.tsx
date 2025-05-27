@@ -100,8 +100,8 @@ export default function CaseDetailPage() {
         setCaseData(null);
       } else if (data) {
         setCaseData(data as Case);
-        setFinalReport(data.finalReportContent || null);
-        // setEditedReport(data.finalReportContent || '');
+        setFinalReport(data.final_report_content || null); // Corrected to snake_case
+        // setEditedReport(data.final_report_content || '');
       }
       setLoading(false);
     };
@@ -116,8 +116,8 @@ export default function CaseDetailPage() {
         { event: 'UPDATE', schema: 'public', table: 'cases', filter: `id=eq.${caseId}` },
         (payload) => {
           setCaseData(payload.new as Case);
-          setFinalReport(payload.new.finalReportContent || null);
-          // setEditedReport(payload.new.finalReportContent || '');
+          setFinalReport(payload.new.final_report_content || null); // Corrected to snake_case
+          // setEditedReport(payload.new.final_report_content || '');
         }
       )
       .subscribe();
@@ -206,12 +206,12 @@ Recommendations: [e.g., Further investigation by arson team, safety recommendati
     try {
       const { error: updateError } = await supabase
         .from('cases')
-        .update({ finalReportContent: contentToSave, status: 'Completed' })
+        .update({ final_report_content: contentToSave, status: 'Completed' }) // Corrected to snake_case
         .eq('id', caseId);
       if (updateError) throw updateError;
       alert('Report saved successfully!');
       // Optionally, update local state if not relying solely on real-time updates
-      setCaseData(prev => prev ? { ...prev, finalReportContent: contentToSave, status: 'Completed' } : null);
+      setCaseData(prev => prev ? { ...prev, final_report_content: contentToSave, status: 'Completed' } : null); // Corrected to snake_case
     } catch (err: any) {
       console.error('Error saving report:', err);
       setError(err.message || 'Failed to save report.');
@@ -221,8 +221,8 @@ Recommendations: [e.g., Further investigation by arson team, safety recommendati
   };
 
   const handleDiscardReport = () => {
-    setFinalReport(caseData?.finalReportContent || null); // Revert to last saved or null
-    // setEditedReport(caseData?.finalReportContent || '');
+    setFinalReport(caseData?.final_report_content || null); // Revert to last saved or null
+    // setEditedReport(caseData?.final_report_content || '');
     alert('Changes discarded.');
   };
 
@@ -230,7 +230,7 @@ Recommendations: [e.g., Further investigation by arson team, safety recommendati
   if (error && !caseData) return <div className="text-center py-10 text-red-500 bg-red-900 p-4 rounded-md">Error: {error} <Link href="/" className="text-fire-primary hover:underline">Go to Dashboard</Link></div>;
   if (!caseData) return <div className="text-center py-10 text-gray-400">Case not found. <Link href="/" className="text-fire-primary hover:underline">Go to Dashboard</Link></div>;
 
-  const initialReportUrl = supabase.storage.from('case-files').getPublicUrl(caseData.initialReportPath).data.publicUrl;
+  const initialReportUrl = supabase.storage.from('case-files').getPublicUrl(caseData.initial_report_path).data.publicUrl;
 
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto">

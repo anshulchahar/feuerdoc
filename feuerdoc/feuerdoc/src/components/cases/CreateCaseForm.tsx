@@ -26,6 +26,7 @@ const CreateCaseForm: React.FC<CreateCaseFormProps> = ({ onCaseCreated, onClose 
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
     setIsLoading(true);
     setError(null);
 
@@ -37,30 +38,29 @@ const CreateCaseForm: React.FC<CreateCaseFormProps> = ({ onCaseCreated, onClose 
 
     try {
       // 1. Upload the initial report to Supabase Storage
-      const fileExt = initialReportFile.name.split('.').pop();
+      const fileExt = initialReportFile!.name.split('.').pop();
       const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `initial_reports/${fileName}`;
+      const filePath = `initial_reports/${fileName}`; // Dynamic filePath based on uploaded file
 
       const { error: uploadError } = await supabase.storage
-        .from('case-files') // Make sure this bucket exists and has correct policies
-        .upload(filePath, initialReportFile);
+        .from('case-files')
+        .upload(filePath, initialReportFile!);
 
       if (uploadError) {
+        // If storage upload fails, don't proceed to DB insert
         throw new Error(`Storage Error: ${uploadError.message}`);
       }
 
-      // 2. Get user ID (assuming user is authenticated - implement auth later)
-      // For now, let's use a placeholder or handle anonymous if your RLS allows
-      const { data: { user } } = await supabase.auth.getUser();
-      const userId = user?.id || 'anonymous-user'; // Replace with actual user ID
+      // 2. Set a generic user ID for public access
+      const userId = '00000000-0000-0000-0000-000000000000'; // Nil UUID for public access
 
       // 3. Create the case record in the database
       const newCaseData = {
         title,
         location,
-        initialReportPath: filePath,
+        initial_report_path: filePath, // Corrected to snake_case
         status: 'Open' as const, // Type assertion
-        userId: userId,
+        user_id: userId, // Corrected to snake_case
         // Supabase will add id, createdAt, updatedAt automatically
       };
 
@@ -98,10 +98,15 @@ const CreateCaseForm: React.FC<CreateCaseFormProps> = ({ onCaseCreated, onClose 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {error && <p className="text-red-500 bg-red-900 p-3 rounded-md">{error}</p>}
+    <form onSubmit={handleSubmit} className="space-y-6 p-1 bg-brand-black text-brand-white rounded-lg">
+      {error && (
+        <div className="p-3 mb-4 text-sm text-red-200 bg-red-900 border border-red-700 rounded-lg shadow-md">
+          <p className="font-semibold">Error:</p>
+          <p>{error}</p>
+        </div>
+      )}
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-300 mb-1">
+        <label htmlFor="title" className="block text-sm font-medium text-brand-gray-light mb-1">
           Case Title
         </label>
         <input
@@ -109,51 +114,69 @@ const CreateCaseForm: React.FC<CreateCaseFormProps> = ({ onCaseCreated, onClose 
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 bg-gray-800 border border-gray-700 rounded-md focus:ring-fire-primary focus:border-fire-primary"
+          className="w-full p-3 bg-brand-gray-dark border border-brand-gray-medium rounded-md placeholder-brand-gray-medium focus:ring-2 focus:ring-fire-primary focus:border-fire-primary transition-colors duration-200"
+          placeholder="e.g., Structure Fire at Elm Street"
           required
+          disabled={isLoading}
         />
       </div>
       <div>
-        <label htmlFor="location" className="block text-sm font-medium text-gray-300 mb-1">
-          Location
+        <label htmlFor="location" className="block text-sm font-medium text-brand-gray-light mb-1">
+          Location / Address
         </label>
         <input
           type="text"
           id="location"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          className="w-full p-2 bg-gray-800 border border-gray-700 rounded-md focus:ring-fire-primary focus:border-fire-primary"
+          className="w-full p-3 bg-brand-gray-dark border border-brand-gray-medium rounded-md placeholder-brand-gray-medium focus:ring-2 focus:ring-fire-primary focus:border-fire-primary transition-colors duration-200"
+          placeholder="e.g., 123 Elm Street, Anytown"
           required
+          disabled={isLoading}
         />
       </div>
       <div>
-        <label htmlFor="initialReportFile" className="block text-sm font-medium text-gray-300 mb-1">
-          Initial Contact Report (PDF/DOCX)
+        <label htmlFor="initialReportFile" className="block text-sm font-medium text-brand-gray-light mb-1">
+          Initial Contact Report (PDF, DOC, DOCX)
         </label>
         <input
           type="file"
           id="initialReportFile"
           onChange={handleFileChange}
           accept=".pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-          className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-fire-primary file:text-white hover:file:bg-fire-secondary"
+          className="w-full text-sm text-brand-gray-light file:mr-4 file:py-2.5 file:px-5 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-fire-primary file:text-brand-white hover:file:bg-fire-secondary file:transition-colors file:duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-fire-primary focus:border-fire-primary disabled:opacity-70"
           required
+          disabled={isLoading}
         />
+        {initialReportFile && (
+          <p className="mt-2 text-xs text-brand-gray-medium">Selected: {initialReportFile.name}</p>
+        )}
       </div>
-      <div className="flex justify-end space-x-3">
+      <div className="flex justify-end items-center space-x-4 pt-2">
         <button
           type="button"
           onClick={onClose}
           disabled={isLoading}
-          className="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-md disabled:opacity-50"
+          className="px-5 py-2.5 text-sm font-medium text-brand-gray-light bg-brand-gray-medium hover:bg-brand-gray-dark rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          className="px-4 py-2 text-sm font-medium text-white bg-fire-primary hover:bg-fire-secondary rounded-md disabled:opacity-50 shadow-fire"
+          className="px-5 py-2.5 text-sm font-medium text-brand-white bg-fire-primary hover:bg-fire-secondary rounded-lg shadow-fire transition-all duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
         >
-          {isLoading ? 'Creating...' : 'Create Case'}
+          {isLoading ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Creating...
+            </>
+          ) : (
+            'Create Case'
+          )}
         </button>
       </div>
     </form>
