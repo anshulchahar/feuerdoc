@@ -297,60 +297,37 @@ export default function CaseDetailPage() {
     setError(null);
 
     try {
-      // Prepare data for Gemini API
-      // This is a simplified representation. You'll need to fetch initial report content.
-      // For now, we'll just send the path and additional notes.
-      const initialReportContent = `Initial Report Path: ${caseData.initial_report_path}. Content needs to be fetched and processed.`; // Placeholder
+      // Prepare audio transcript from recorded audio notes
       let audioTranscript = '';
       if (audioNotes.length > 0) {
-        // In a real app, you would send audioNotes to a speech-to-text API
-        audioTranscript = `[${audioNotes.length} audio note(s) recorded - transcription would go here]`;
+        // TODO: In a production app, you would send audioNotes to a speech-to-text API
+        // For now, we'll provide a placeholder indicating audio was recorded
+        audioTranscript = `[${audioNotes.length} audio note(s) recorded with total size of ${Math.round(audioNotes.reduce((sum, note) => sum + note.size, 0) / 1024)} KB. Audio transcription would be processed here to extract relevant incident details, observations, and actions taken.]`;
       }
 
-      const prompt = `
-        Fire Department Case Report Generation
-        Case Title: ${caseData.title}
-        Case Location: ${caseData.location}
-        Initial Report Summary: ${initialReportContent}
-        Additional Field Notes (Text): ${additionalNotes}
-        Additional Field Notes (Audio Transcript): ${audioTranscript}
+      // Call the actual API route for report generation
+      const response = await fetch('/api/generate-report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          caseId: caseData.id,
+          caseTitle: caseData.title,
+          caseLocation: caseData.location,
+          initialReportPath: caseData.initial_report_path,
+          additionalNotes: additionalNotes,
+          audioTranscript: audioTranscript
+        }),
+      });
 
-        Based on the information above, please generate a comprehensive final fire incident report.
-        Include sections for: Incident Overview, Actions Taken, Observations, Contributing Factors, and Conclusion.
-      `;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
 
-      // Simulate API call to Gemini (replace with actual API call)
-      // const response = await callGeminiApi(prompt);
-      // For now, simulate a delay and a mock response:
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      const mockReport = `
-## Final Fire Incident Report: ${caseData.title}
-
-**Incident Overview:**
-On [Date], a fire incident occurred at ${caseData.location}. The initial call was received at [Time]. 
-[Details from initial report and field notes about the nature and scale of the fire.]
-
-**Actions Taken:**
-Upon arrival, fire crews [Describe actions: e.g., deployed hoses, performed search and rescue, ventilated the structure]. 
-[Details from field notes about specific actions, equipment used, and personnel involved.]
-
-**Observations:**
-[Detailed observations about the fire scene, structural damage, potential hazards, and any witness statements. Incorporate text and audio notes.]
-
-**Contributing Factors:**
-[Analysis of potential causes or factors that contributed to the fire, based on available information.]
-
-**Conclusion & Recommendations:**
-The fire was declared under control at [Time]. [Summary of the outcome, any injuries or fatalities, and estimated damages.] 
-Recommendations: [e.g., Further investigation by arson team, safety recommendations for the property owner].
-      `.trim();
-      
-      setFinalReport(mockReport);
-      // setEditedReport(mockReport);
-
-      // Optionally, save this initial AI-generated report to Supabase immediately
-      // Or wait for user to explicitly save after editing.
-      // await supabase.from('cases').update({ finalReportContent: mockReport, status: 'InProgress' }).eq('id', caseId);
+      const { report } = await response.json();
+      setFinalReport(report);
 
     } catch (err: any) {
       console.error('Error generating report:', err);
@@ -413,6 +390,7 @@ Recommendations: [e.g., Further investigation by arson team, safety recommendati
           
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-gray-200 mb-2">Initial Contact Report</h3>
+            <p className="text-xs text-gray-400 mb-3">This document contains the initial incident information that will be processed and combined with your field notes to generate the final report.</p>
             {caseData.initial_report_path ? (
               <a 
                 href={initialReportUrl} 
@@ -433,21 +411,28 @@ Recommendations: [e.g., Further investigation by arson team, safety recommendati
 
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-gray-200 mb-1">Additional Field Notes (Text)</h3>
+            <p className="text-xs text-gray-400 mb-2">Include details such as: arrival times, actions taken, equipment used, personnel involved, observations, witness statements, damage assessment, hazards, weather conditions, etc.</p>
             <textarea
               value={additionalNotes}
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setAdditionalNotes(e.target.value)}
               rows={5}
-              placeholder="Enter any additional observations, actions, or notes..."
+              placeholder="Enter additional field observations, actions taken, equipment used, personnel involved, witness statements, structural damage, hazards encountered, etc..."
               className="w-full p-3 bg-gray-900 border border-gray-700 rounded-md focus:ring-fire-primary focus:border-fire-primary text-gray-200 placeholder-gray-500"
             />
           </div>
 
           <AudioRecorder onRecordingComplete={(audioBlob) => setAudioNotes(prev => [...prev, audioBlob])} />
           {audioNotes.length > 0 && (
-            <p className="text-sm text-green-400 mt-2">
-              {audioNotes.length} audio note(s) recorded (Total: {Math.round(audioNotes.reduce((sum, note) => sum + note.size, 0) / 1024)} KB). 
-              They will be included in the report generation.
-            </p>
+            <div className="mt-3 p-3 bg-green-900/30 border border-green-700 rounded-md">
+              <h4 className="text-sm font-medium text-green-300 mb-2">Audio Notes Summary</h4>
+              <div className="space-y-1 text-sm text-green-200">
+                <p>{audioNotes.length} audio recording(s) captured</p>
+                <p>Total size: {Math.round(audioNotes.reduce((sum, note) => sum + note.size, 0) / 1024)} KB</p>
+                <p className="text-xs text-green-400 mt-2">
+                  ⚠️ Note: Audio transcription is currently simulated. In production, these recordings would be processed by a speech-to-text service to extract relevant incident details, observations, and actions taken.
+                </p>
+              </div>
+            </div>
           )}
 
           <button
@@ -455,8 +440,11 @@ Recommendations: [e.g., Further investigation by arson team, safety recommendati
             disabled={isGeneratingReport || !caseData}
             className="w-full mt-4 bg-fire-primary hover:bg-fire-secondary text-white font-bold py-3 px-4 rounded-md transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {isGeneratingReport ? 'Generating Report...' : 'Generate Final Report (AI)'}
+            {isGeneratingReport ? 'Analyzing Reports & Generating...' : 'Generate Final Report with AI'}
           </button>
+          <p className="text-xs text-gray-400 mt-2 text-center">
+            AI will analyze the initial report and combine it with your field notes to create a comprehensive final incident report.
+          </p>
         </div>
 
         {/* Section 2: Final Report Display & Edit */}

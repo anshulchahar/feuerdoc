@@ -12,10 +12,10 @@ const model = genAI.getGenerativeModel({
 });
 
 const generationConfig = {
-  temperature: 0.7, // Adjusted for a balance between creativity and coherence
-  topP: 0.95,
-  topK: 64,
-  maxOutputTokens: 8192, // Increased for potentially longer reports
+  temperature: 0.3, // Lower temperature for more factual, consistent reports
+  topP: 0.8,
+  topK: 40,
+  maxOutputTokens: 12288, // Increased for longer, detailed reports
   responseMimeType: 'text/plain',
 };
 
