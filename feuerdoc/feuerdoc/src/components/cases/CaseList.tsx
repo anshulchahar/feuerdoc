@@ -19,72 +19,96 @@ const CaseList: React.FC<CaseListProps> = ({ initialCases = [], onCaseSelected }
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
+    const channelName = 'public:cases';
+
     const fetchCases = async () => {
-      setLoading(true); // Ensure loading is true at the start of fetch
-      // Assuming user is authenticated, filter by user_id or implement public access rules
-      // const { data: { user } } = await supabase.auth.getUser();
-      // For now, fetch all cases as user auth is not implemented
-      // const { data: { user } } = await supabase.auth.getUser();
+      if (!isMounted) return;
+      setLoading(true);
+      try {
+        const { data: dbData, error: dbError } = await supabase
+          .from('cases')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-      const { data, error: dbError } = await supabase
-        .from('cases')
-        .select('*')
-        // .eq('userId', user?.id) // Keep this commented until auth is active
-        .order('created_at', { ascending: false }); // Corrected to snake_case
-
-      if (dbError) {
-        console.error('Error fetching cases:', dbError);
-        setError(dbError.message);
-      } else if (data) {
-        setCases(data as Case[]);
+        if (!isMounted) return;
+        if (dbError) {
+          console.error('Error fetching cases:', dbError);
+          setError(dbError.message);
+          setCases([]); // Clear cases on error
+        } else if (dbData) {
+          setCases(dbData as Case[]);
+        }
+      } catch (e: any) {
+        if (!isMounted) return;
+        console.error('Exception fetching cases:', e);
+        setError(e.message || 'Failed to load cases');
+        setCases([]); // Clear cases on error
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
-      setLoading(false);
     };
 
-    if (!initialCases.length) {
+    if (initialCases.length > 0) {
+      // If initialCases are provided, use them and don't fetch initially.
+      // This branch is not hit when CaseList is used on HomePage as it provides no initialCases.
+      setCases(initialCases);
+      setLoading(false);
+    } else {
+      // No initial cases, so fetch them.
       fetchCases();
     }
 
-    // Set up a real-time subscription to new cases
     const caseSubscription = supabase
-      .channel('public:cases')
+      .channel(channelName)
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'cases' },
         (payload) => {
-          console.log('New case received:', payload);
-          setCases((prevCases) => [payload.new as Case, ...prevCases].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())); // Corrected to snake_case
+          if (isMounted) {
+            console.log('New case received via subscription:', payload);
+            setCases((prevCases) => [payload.new as Case, ...prevCases].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
+          }
         }
       )
       .on(
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'cases' },
         (payload) => {
-          console.log('Case update received:', payload);
-          setCases((prevCases) =>
-            prevCases.map(c => c.id === payload.new.id ? payload.new as Case : c).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()) // Corrected to snake_case
-          );
+          if (isMounted) {
+            console.log('Case update received via subscription:', payload);
+            setCases((prevCases) =>
+              prevCases.map(c => c.id === payload.new.id ? payload.new as Case : c).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+            );
+          }
         }
       )
       .on(
         'postgres_changes',
         { event: 'DELETE', schema: 'public', table: 'cases' },
         (payload) => {
-          console.log('Case delete received:', payload);
-          setCases((prevCases) => prevCases.filter(c => c.id !== payload.old.id));
+          if (isMounted) {
+            console.log('Case delete received via subscription:', payload);
+            setCases((prevCases) => prevCases.filter(c => c.id !== payload.old.id));
+          }
         }
       )
       .subscribe((status, err) => {
-        if (err) {
-          console.error('Subscription error:', err);
-          setError('Real-time connection failed. Please refresh.');
+        if (isMounted) {
+          if (err) {
+            console.error('Subscription error:', err);
+            setError('Real-time connection failed. Please refresh.');
+          }
         }
       });
 
     return () => {
+      isMounted = false;
       supabase.removeChannel(caseSubscription);
     };
-  }, [initialCases]);
+  }, []); // Empty dependency array
 
   const handleCardClick = (caseData: Case) => {
     setSelectedCase(caseData);
@@ -139,7 +163,7 @@ const CaseList: React.FC<CaseListProps> = ({ initialCases = [], onCaseSelected }
             <p><strong className="text-brand-gray-light">Status:</strong> {selectedCase.status}</p>
             <p><strong className="text-brand-gray-light">Initial Report:</strong> 
               <a 
-                href={supabase.storage.from('case-files').getPublicUrl(selectedCase.initialReportPath).data.publicUrl}
+                href={supabase.storage.from('case-files').getPublicUrl(selectedCase.initial_report_path).data.publicUrl}
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="text-fire-primary hover:text-fire-secondary underline ml-2"
