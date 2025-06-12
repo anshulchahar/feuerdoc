@@ -299,7 +299,7 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
                 href={supabase.storage.from('case-files').getPublicUrl(selectedCase.initial_report_path).data.publicUrl}
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-md transition-colors text-sm"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md transition-colors text-sm"
               >
                 Download
               </a>

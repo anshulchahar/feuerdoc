@@ -118,7 +118,7 @@ const SearchAndSort: React.FC<SearchAndSortProps> = ({
             className={`flex items-center gap-1 px-3 py-1 text-sm rounded-md transition-colors ${
               sortField === 'created_at'
                 ? 'bg-fire-primary text-white'
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
             }`}
           >
             Created {getSortIcon('created_at')}
@@ -129,7 +129,7 @@ const SearchAndSort: React.FC<SearchAndSortProps> = ({
             className={`flex items-center gap-1 px-3 py-1 text-sm rounded-md transition-colors ${
               sortField === 'updated_at'
                 ? 'bg-fire-primary text-white'
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
             }`}
           >
             Updated {getSortIcon('updated_at')}
@@ -140,7 +140,7 @@ const SearchAndSort: React.FC<SearchAndSortProps> = ({
             className={`flex items-center gap-1 px-3 py-1 text-sm rounded-md transition-colors ${
               sortField === 'title'
                 ? 'bg-fire-primary text-white'
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
             }`}
           >
             Title {getSortIcon('title')}
@@ -151,7 +151,7 @@ const SearchAndSort: React.FC<SearchAndSortProps> = ({
             className={`flex items-center gap-1 px-3 py-1 text-sm rounded-md transition-colors ${
               sortField === 'location'
                 ? 'bg-fire-primary text-white'
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
             }`}
           >
             Location {getSortIcon('location')}
@@ -162,7 +162,7 @@ const SearchAndSort: React.FC<SearchAndSortProps> = ({
             className={`flex items-center gap-1 px-3 py-1 text-sm rounded-md transition-colors ${
               sortField === 'status'
                 ? 'bg-fire-primary text-white'
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
             }`}
           >
             Status {getSortIcon('status')}

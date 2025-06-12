@@ -89,7 +89,7 @@ const CaseListView: React.FC<CaseListViewProps> = ({ caseData, onInfoClick, onEd
                 e.stopPropagation();
                 onEditClick();
               }}
-              className="p-2 rounded-full bg-gray-500 hover:bg-gray-600 text-white transition-colors duration-200"
+              className="p-2 rounded-full bg-green-600 hover:bg-green-700 text-white transition-colors duration-200"
               title="Edit Case"
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
