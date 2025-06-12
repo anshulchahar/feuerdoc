@@ -53,9 +53,6 @@ export default function HomePage() {
       </Modal>
 
       <div className="w-full max-w-5xl px-4">
-        <h2 className="text-3xl font-semibold mb-6 text-gray-900 dark:text-gray-100 text-center">
-          Cases
-        </h2>
         <CaseList ref={caseListRef} />
       </div>
     </div>

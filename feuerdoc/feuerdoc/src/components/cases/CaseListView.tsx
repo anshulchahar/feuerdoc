@@ -27,7 +27,7 @@ const CaseListView: React.FC<CaseListViewProps> = ({ caseData, onInfoClick, onEd
   };
 
   return (
-    <div className="glass-card p-4 rounded-lg border hover:border-fire-primary transition-all duration-300 ease-in-out shadow-sm hover:shadow-md">
+    <div className="glass-card p-4 rounded-lg border hover:border-fire-primary transition-all duration-300 ease-in-out">
       <div className="flex items-center justify-between">
         {/* Main Content */}
         <div className="flex-1 min-w-0">
@@ -74,7 +74,7 @@ const CaseListView: React.FC<CaseListViewProps> = ({ caseData, onInfoClick, onEd
               e.stopPropagation();
               onInfoClick();
             }}
-            className="p-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors duration-200 shadow-sm hover:shadow-md"
+            className="p-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors duration-200"
             title="View Details"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -89,7 +89,7 @@ const CaseListView: React.FC<CaseListViewProps> = ({ caseData, onInfoClick, onEd
                 e.stopPropagation();
                 onEditClick();
               }}
-              className="p-2 rounded-full bg-gray-500 hover:bg-gray-600 text-white transition-colors duration-200 shadow-sm hover:shadow-md"
+              className="p-2 rounded-full bg-gray-500 hover:bg-gray-600 text-white transition-colors duration-200"
               title="Edit Case"
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">

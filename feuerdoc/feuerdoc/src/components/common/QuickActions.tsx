@@ -32,7 +32,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
   ];
 
   return (
-    <div className="glass-card p-4 rounded-lg shadow-sm mb-4">
+    <div className="glass-card p-4 rounded-lg mb-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         {/* Quick Status Filters */}
         <div className="flex flex-wrap gap-2">

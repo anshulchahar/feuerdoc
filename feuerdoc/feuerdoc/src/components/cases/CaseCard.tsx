@@ -13,7 +13,7 @@ interface CaseCardProps {
 const CaseCard: React.FC<CaseCardProps> = ({ caseData, onInfoClick, onEditClick }) => {
   return (
     <div
-      className="glass-card p-5 rounded-xl border hover:border-fire-primary transition-all duration-300 ease-in-out shadow-lg transform hover:-translate-y-1 relative"
+      className="glass-card p-5 rounded-xl border hover:border-fire-primary transition-all duration-300 ease-in-out transform hover:-translate-y-1 relative"
     >
       <h3 className="text-xl font-semibold text-fire-primary mb-2 truncate" title={caseData.title}>{caseData.title}</h3>
       <p className="text-sm text-gray-600 dark:text-gray-400 mb-1 truncate" title={caseData.location}>Location: {caseData.location}</p>
@@ -28,7 +28,7 @@ const CaseCard: React.FC<CaseCardProps> = ({ caseData, onInfoClick, onEditClick 
               e.stopPropagation();
               onInfoClick();
             }}
-            className="p-1.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors duration-200 shadow-sm hover:shadow-md"
+            className="p-1.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors duration-200"
             title="View Details"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -38,7 +38,7 @@ const CaseCard: React.FC<CaseCardProps> = ({ caseData, onInfoClick, onEditClick 
           {/* Edit/pencil icon for navigation */}
           <Link href={`/cases/${caseData.id}`}>
             <button
-              className="p-1.5 rounded-full bg-fire-primary hover:bg-fire-secondary text-white transition-colors duration-200 shadow-sm hover:shadow-md"
+              className="p-1.5 rounded-full bg-fire-primary hover:bg-fire-secondary text-white transition-colors duration-200"
               title="Edit Case"
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">

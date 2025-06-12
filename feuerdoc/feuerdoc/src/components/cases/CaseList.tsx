@@ -194,7 +194,7 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
   return (
     <>
       {/* Quick Actions Bar with enhanced functionality */}
-      <div className="glass-card p-4 rounded-lg shadow-sm mb-6">
+      <div className="glass-card p-4 rounded-lg mb-6">
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
           {/* Search Section */}
           <div className="flex-1 w-full lg:max-w-md">
@@ -239,7 +239,7 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
       />
 
       {filteredAndSortedCases.length === 0 && !loading ? (
-        <div className="text-center py-10 px-6 bg-brand-gray-dark rounded-lg shadow-xl">
+        <div className="text-center py-10 px-6 bg-brand-gray-dark rounded-lg">
           <svg className="mx-auto h-12 w-12 text-brand-gray-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
           </svg>
