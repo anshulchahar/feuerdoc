@@ -48,7 +48,6 @@ const CaseCard: React.FC<CaseCardProps> = ({ caseData, onInfoClick, onEditClick 
           </Link>
         </div>
       </div>
-      <p className="text-xs text-gray-500 dark:text-gray-500">Last Updated: {new Date(caseData.updated_at).toLocaleDateString()}</p>
     </div>
   );
 };

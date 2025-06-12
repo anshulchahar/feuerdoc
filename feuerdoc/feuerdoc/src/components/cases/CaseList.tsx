@@ -309,7 +309,6 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
               </a>
             </div>
             <p><strong style={{ color: '#374151' }}>Created:</strong> {new Date(selectedCase.created_at).toLocaleString()}</p>
-            <p><strong style={{ color: '#374151' }}>Last Updated:</strong> {new Date(selectedCase.updated_at).toLocaleString()}</p>
             {selectedCase.final_report_content && (
               <div>
                 <strong style={{ color: '#374151' }}>Final Report:</strong>
