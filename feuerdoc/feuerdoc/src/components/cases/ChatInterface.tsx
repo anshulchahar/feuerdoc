@@ -241,7 +241,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
   return (
     <div 
-      className={`flex flex-col h-screen ${theme === 'light' ? 'bg-gray-50' : 'bg-gray-900'}`}
+      className={`flex flex-col h-screen w-full ${theme === 'light' ? 'bg-gray-50' : 'bg-gray-900'}`}
       data-theme={theme}
       style={{
         backgroundColor: theme === 'light' ? '#f9fafb' : '#111827',
