@@ -158,7 +158,6 @@ const CaseList: React.FC<CaseListProps> = ({ initialCases = [], onCaseSelected }
           title={`Case Details: ${selectedCase.title}`}
         >
           <div className="space-y-3 text-brand-gray-light p-1">
-            <p><strong className="text-brand-gray-light">ID:</strong> {selectedCase.id}</p>
             <p><strong className="text-brand-gray-light">Location:</strong> {selectedCase.location}</p>
             <p><strong className="text-brand-gray-light">Status:</strong> {selectedCase.status}</p>
             <p><strong className="text-brand-gray-light">Initial Report:</strong> 

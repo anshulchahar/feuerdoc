@@ -24,7 +24,6 @@ const CaseCard: React.FC<CaseCardProps> = ({ caseData, onClick }) => {
         <span className={`text-xs px-2 py-0.5 rounded-full ${caseData.status === 'Open' ? 'bg-blue-500 text-white' : caseData.status === 'InProgress' ? 'bg-yellow-500 text-black' : caseData.status === 'Completed' ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'}`}>
           {caseData.status}
         </span>
-        <p className="text-xs text-gray-500 dark:text-gray-500">ID: {caseData.id.substring(0, 8)}...</p>
       </div>
       <p className="text-xs text-gray-500 dark:text-gray-500">Last Updated: {new Date(caseData.updated_at).toLocaleDateString()}</p>
     </div>
