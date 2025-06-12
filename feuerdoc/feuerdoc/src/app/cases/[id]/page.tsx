@@ -367,30 +367,30 @@ export default function CaseDetailPage() {
     alert('Changes discarded.');
   };
 
-  if (loading) return <div className="text-center py-10 text-gray-400">Loading case details...</div>;
-  if (error && !caseData) return <div className="text-center py-10 text-red-500 bg-red-900 p-4 rounded-md">Error: {error} <Link href="/" className="text-fire-primary hover:underline">Go to Dashboard</Link></div>;
-  if (!caseData) return <div className="text-center py-10 text-gray-400">Case not found. <Link href="/" className="text-fire-primary hover:underline">Go to Dashboard</Link></div>;
+  if (loading) return <div className="text-center py-10 text-gray-600 dark:text-gray-400">Loading case details...</div>;
+  if (error && !caseData) return <div className="text-center py-10 text-red-600 dark:text-red-500 bg-red-100 dark:bg-red-900 p-4 rounded-md">Error: {error} <Link href="/" className="text-fire-primary hover:underline">Go to Dashboard</Link></div>;
+  if (!caseData) return <div className="text-center py-10 text-gray-600 dark:text-gray-400">Case not found. <Link href="/" className="text-fire-primary hover:underline">Go to Dashboard</Link></div>;
 
   const initialReportUrl = supabase.storage.from('case-files').getPublicUrl(caseData.initial_report_path).data.publicUrl;
 
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto">
-      <div className="mb-6 pb-4 border-b border-gray-800">
+      <div className="mb-6 pb-4 border-b border-gray-300 dark:border-gray-800">
         <h1 className="text-3xl md:text-4xl font-bold text-fire-primary mb-2">{caseData.title}</h1>
-        <p className="text-lg text-gray-400">Location: {caseData.location}</p>
-        <p className="text-sm text-gray-500">Status: <span className={`font-semibold ${caseData.status === 'Completed' ? 'text-green-400' : 'text-yellow-400'}`}>{caseData.status}</span></p>
+        <p className="text-lg text-gray-600 dark:text-gray-400">Location: {caseData.location}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-500">Status: <span className={`font-semibold ${caseData.status === 'Completed' ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400'}`}>{caseData.status}</span></p>
       </div>
 
-      {error && <p className="my-4 text-red-500 bg-red-900 p-3 rounded-md">Error: {error}</p>}
+      {error && <p className="my-4 text-red-600 dark:text-red-500 bg-red-100 dark:bg-red-900 p-3 rounded-md">Error: {error}</p>}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* Section 1: Initial Report & Inputs */}
-        <div className="bg-gray-950 p-6 rounded-lg shadow-lg border border-gray-800">
-          <h2 className="text-2xl font-semibold text-gray-100 mb-4">Case Inputs</h2>
+        <div className="glass-card p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Case Inputs</h2>
           
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-200 mb-2">Initial Contact Report</h3>
-            <p className="text-xs text-gray-400 mb-3">This document contains the initial incident information that will be processed and combined with your field notes to generate the final report.</p>
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Initial Contact Report</h3>
+            <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">This document contains the initial incident information that will be processed and combined with your field notes to generate the final report.</p>
             {caseData.initial_report_path ? (
               <a 
                 href={initialReportUrl} 
@@ -448,8 +448,8 @@ export default function CaseDetailPage() {
         </div>
 
         {/* Section 2: Final Report Display & Edit */}
-        <div className="bg-gray-950 p-6 rounded-lg shadow-lg border border-gray-800">
-          <h2 className="text-2xl font-semibold text-gray-100 mb-4">Final Report</h2>
+        <div className="glass-card p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Final Report</h2>
           {finalReport !== null ? (
             <div>
               {/* Using a simple textarea for editing for now. Replace with ReactQuill or similar for rich text */}
@@ -457,7 +457,7 @@ export default function CaseDetailPage() {
                 value={finalReport} // Or editedReport if using a separate state for edits
                 onChange={(e) => setFinalReport(e.target.value)} // Or setEditedReport
                 rows={15}
-                className="w-full p-3 bg-gray-900 border border-gray-700 rounded-md focus:ring-fire-primary focus:border-fire-primary text-gray-200 mb-4 h-96 resize-y"
+                className="w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-fire-primary focus:border-fire-primary text-gray-900 dark:text-gray-200 mb-4 h-96 resize-y"
                 placeholder="Final report will appear here..."
               />
               {/* <ReactQuill 
@@ -484,7 +484,7 @@ export default function CaseDetailPage() {
               </div>
             </div>
           ) : (
-            <div className="text-center py-10 text-gray-500">
+            <div className="text-center py-10 text-gray-600 dark:text-gray-500">
               <p>No final report generated yet, or the case is still open.</p>
               <p>Use the controls on the left to input details and generate the report.</p>
             </div>

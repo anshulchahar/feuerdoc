@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { Case } from '@/types'; // Full Case type
 import { usePathname } from 'next/navigation';
+import ThemeToggle from '@/components/common/ThemeToggle';
 
 // Define a specific type for sidebar cases if only a subset of fields is needed
 interface SidebarCase {
@@ -55,33 +56,34 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <aside className="w-72 bg-gray-950 p-5 border-r border-gray-800 flex flex-col h-screen shadow-lg">
-      <div className="mb-10">
+    <aside className="w-72 glass-sidebar p-5 flex flex-col h-screen shadow-lg transition-colors duration-300">
+      <div className="mb-6 flex items-center justify-between">
         <Link href="/" className="text-3xl font-bold text-fire-primary hover:text-fire-secondary transition-colors">
           FeuerDoc
         </Link>
+        <ThemeToggle />
       </div>
-      <nav className="flex-grow overflow-y-auto space-y-2 pr-2 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-gray-900">
+      <nav className="flex-grow overflow-y-auto space-y-2 pr-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-800 scrollbar-track-gray-100 dark:scrollbar-track-gray-900">
         <Link 
           href="/"
-          className={`block py-2 px-3 rounded-md text-gray-300 hover:bg-gray-800 hover:text-white transition-colors ${pathname === '/' ? 'bg-gray-800 text-white' : ''}`}
+          className={`block py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors ${pathname === '/' ? 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white' : ''}`}
         >
           Dashboard
         </Link>
         
         <div>
-          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2 px-3 mt-4">Cases</h3>
+          <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider mb-2 px-3 mt-4">Cases</h3>
           {isLoading ? (
-            <p className="text-gray-400 px-3 text-sm">Loading cases...</p>
+            <p className="text-gray-600 dark:text-gray-400 px-3 text-sm">Loading cases...</p>
           ) : cases.length === 0 ? (
-            <p className="text-gray-400 px-3 text-sm">No cases yet.</p>
+            <p className="text-gray-600 dark:text-gray-400 px-3 text-sm">No cases yet.</p>
           ) : (
             <ul className="space-y-1">
               {cases.map((caseItem) => (
                 <li key={caseItem.id}>
                   <Link 
                     href={`/cases/${caseItem.id}`}
-                    className={`block py-2 px-3 rounded-md text-sm text-gray-400 hover:bg-gray-800 hover:text-white truncate transition-colors ${pathname === `/cases/${caseItem.id}` ? 'bg-gray-800 text-white' : ''}`}
+                    className={`block py-2 px-3 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white truncate transition-colors ${pathname === `/cases/${caseItem.id}` ? 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white' : ''}`}
                     title={caseItem.title}
                   >
                     {caseItem.title}
@@ -93,9 +95,9 @@ const Sidebar = () => {
         </div>
         {/* Add other navigation items here */}
       </nav>
-      <div className="mt-auto pt-4 border-t border-gray-800">
+      <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-800">
         {/* User profile/logout can go here */}
-        <p className="text-xs text-gray-500 text-center">© {new Date().getFullYear()} FeuerDoc</p>
+        <p className="text-xs text-gray-500 dark:text-gray-500 text-center">© {new Date().getFullYear()} FeuerDoc</p>
       </div>
     </aside>
   );

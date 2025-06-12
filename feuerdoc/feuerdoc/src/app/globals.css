@@ -5,13 +5,49 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 0, 0, 0;
-
   --fire-red-primary: #FF4500;
   --fire-red-secondary: #FF0000;
   --fire-red-tertiary: #B22222;
+}
+
+/* Light theme variables */
+:root.light,
+:root[data-theme="light"] {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 248, 250, 252;
+  --background-end-rgb: 248, 250, 252;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --background-secondary: rgba(255, 255, 255, 0.8);
+  --background-tertiary: rgba(255, 255, 255, 0.6);
+  --border-color: rgba(148, 163, 184, 0.3);
+  --text-muted: #64748b;
+  --text-secondary: #334155;
+  --glass-background: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --sidebar-bg: rgba(255, 255, 255, 0.95);
+  --card-bg: rgba(255, 255, 255, 0.4);
+  --card-border: rgba(148, 163, 184, 0.2);
+}
+
+/* Dark theme variables */
+:root.dark,
+:root[data-theme="dark"] {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --background-secondary: #1a1a1a;
+  --background-tertiary: #2a2a2a;
+  --border-color: #374151;
+  --text-muted: #9ca3af;
+  --text-secondary: #d1d5db;
+  --glass-background: rgba(17, 24, 39, 0.8);
+  --glass-border: rgba(75, 85, 99, 0.3);
+  --sidebar-bg: #111827;
+  --card-bg: #1f2937;
+  --card-border: #374151;
 }
 
 @theme inline {
@@ -21,16 +57,10 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-start-rgb)); /* Simplified background for now */
+  background: rgb(var(--background-start-rgb));
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @layer utilities {
@@ -45,5 +75,47 @@ body {
   }
   .border-fire-primary {
     border-color: var(--fire-red-primary);
+  }
+  
+  /* Theme-aware utilities */
+  .bg-theme-primary {
+    background-color: var(--background);
+  }
+  .bg-theme-secondary {
+    background-color: var(--background-secondary);
+  }
+  .bg-theme-tertiary {
+    background-color: var(--background-tertiary);
+  }
+  .text-theme-primary {
+    color: var(--foreground);
+  }
+  .text-theme-secondary {
+    color: var(--text-secondary);
+  }
+  .text-theme-muted {
+    color: var(--text-muted);
+  }
+  .border-theme {
+    border-color: var(--border-color);
+  }
+  
+  /* Glassmorphic utilities */
+  .glass {
+    background: var(--glass-background);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+  }
+  
+  .glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--card-border);
+  }
+  
+  .glass-sidebar {
+    background: var(--sidebar-bg);
+    backdrop-filter: blur(15px);
+    border-right: 1px solid var(--border-color);
   }
 }
