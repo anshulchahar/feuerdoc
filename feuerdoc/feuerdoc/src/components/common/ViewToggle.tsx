@@ -11,13 +11,16 @@ interface ViewToggleProps {
 
 const ViewToggle: React.FC<ViewToggleProps> = ({ viewMode, onViewModeChange }) => {
   return (
-    <div className="flex items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-1">
+    <div 
+      className="flex items-center force-light-mode light-mode-container !bg-white dark:!bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-1 shadow-sm"
+      style={{ backgroundColor: 'white', borderColor: '#e5e7eb' }}
+    >
       <button
         onClick={() => onViewModeChange('grid')}
         className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
           viewMode === 'grid'
-            ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
-            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
+            ? 'bg-fire-primary text-white shadow-sm'
+            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700'
         }`}
         title="Grid view"
       >
@@ -31,8 +34,8 @@ const ViewToggle: React.FC<ViewToggleProps> = ({ viewMode, onViewModeChange }) =
         onClick={() => onViewModeChange('list')}
         className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
           viewMode === 'list'
-            ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
-            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
+            ? 'bg-fire-primary text-white shadow-sm'
+            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700'
         }`}
         title="List view"
       >

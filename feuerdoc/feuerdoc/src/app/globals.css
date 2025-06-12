@@ -26,7 +26,7 @@
   --glass-background: rgba(255, 255, 255, 0.25);
   --glass-border: rgba(255, 255, 255, 0.18);
   --sidebar-bg: rgba(255, 255, 255, 0.95);
-  --card-bg: rgba(255, 255, 255, 0.4);
+  --card-bg: rgba(255, 255, 255, 0.85);
   --card-border: rgba(148, 163, 184, 0.2);
 }
 
@@ -117,5 +117,35 @@ body {
     background: var(--sidebar-bg);
     backdrop-filter: blur(15px);
     border-right: 1px solid var(--border-color);
+  }
+  
+  /* Force light mode for search containers */
+  .search-container {
+    background-color: white !important;
+    border-color: #e5e7eb !important;
+  }
+  
+  .dark .search-container {
+    background-color: #374151 !important;
+    border-color: #4b5563 !important;
+  }
+  
+  /* Force light styling for specific elements */
+  .force-light-mode {
+    background-color: white !important;
+    border-color: #e5e7eb !important;
+    color: #111827 !important;
+  }
+  
+  /* Override any dark mode detection */
+  .light-mode-container {
+    background-color: white !important;
+    border: 1px solid #e5e7eb !important;
+  }
+  
+  .light-mode-container input {
+    background-color: white !important;
+    border-color: #d1d5db !important;
+    color: #111827 !important;
   }
 }
