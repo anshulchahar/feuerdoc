@@ -55,7 +55,7 @@ export const SpeechToTextDemo: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gray-950 text-gray-200 min-h-screen">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-fire-primary mb-2">Speech-to-Text Demo</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Speech-to-Text Demo</h1>
         <p className="text-gray-400 mb-4">
           Test the free speech-to-text functionality for incident reporting. 
           Try saying phrases like "Engine 12 arrived at scene", "Captain Smith deployed ladder truck", 

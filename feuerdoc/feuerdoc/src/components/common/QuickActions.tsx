@@ -58,7 +58,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
           {hasActiveFilters && (
             <button
               onClick={onClearFilters}
-              className="text-sm text-fire-primary hover:text-fire-secondary transition-all duration-200 flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-fire-primary/10 font-medium"
+              className="text-sm text-gray-900 hover:text-gray-700 dark:text-white dark:hover:text-gray-200 transition-all duration-200 flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 font-medium"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

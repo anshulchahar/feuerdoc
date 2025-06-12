@@ -181,7 +181,7 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
   if (loading) {
     return (
       <div className="flex justify-center items-center h-40">
-        <svg className="animate-spin h-8 w-8 text-fire-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <svg className="animate-spin h-8 w-8 text-gray-900 dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
@@ -189,7 +189,7 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
       </div>
     );
   }
-  if (error) return <p className="text-center text-red-400 bg-red-900 p-4 rounded-md">Error loading cases: {error}</p>;
+  if (error) return <p className="text-center text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 p-4 rounded-md">Error loading cases: {error}</p>;
 
   return (
     <>
@@ -212,7 +212,7 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
                 placeholder="Search cases by title, location, or status..."
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="block w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-fire-primary focus:border-fire-primary transition-all duration-200 shadow-sm focus:shadow-md"
+                className="block w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-gray-900 dark:focus:border-white transition-all duration-200 shadow-sm focus:shadow-md"
                 style={{ backgroundColor: 'white', borderColor: '#e5e7eb', color: '#111827' }}
               />
             </div>
@@ -295,7 +295,7 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
             <div className="flex gap-2 ml-2">
               <button
                 onClick={() => setIsPreviewOpen(true)}
-                className="bg-fire-primary hover:bg-fire-secondary text-white px-3 py-1 rounded-md transition-colors text-sm"
+                className="bg-gray-900 hover:bg-gray-700 dark:bg-white dark:hover:bg-gray-200 text-white dark:text-black px-3 py-1 rounded-md transition-colors text-sm"
               >
                 Preview Report
               </button>

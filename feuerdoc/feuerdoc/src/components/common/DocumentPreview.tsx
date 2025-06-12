@@ -69,7 +69,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
     if (loading) {
       return (
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fire-primary"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-white"></div>
           <span className="ml-3 text-gray-600 dark:text-gray-400">Loading preview...</span>
         </div>
       );
@@ -81,10 +81,10 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
           <button
             onClick={handleDownload}
-            className="bg-fire-primary hover:bg-fire-secondary text-white px-4 py-2 rounded-md transition-colors"
+            className="bg-gray-900 hover:bg-gray-700 dark:bg-white dark:hover:bg-gray-200 text-white dark:text-black px-4 py-2 rounded-md transition-colors"
           >
             Download Document
           </button>
@@ -128,7 +128,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         </p>
         <button
           onClick={handleDownload}
-          className="bg-fire-primary hover:bg-fire-secondary text-white px-4 py-2 rounded-md transition-colors"
+          className="bg-gray-900 hover:bg-gray-700 dark:bg-white dark:hover:bg-gray-200 text-white dark:text-black px-4 py-2 rounded-md transition-colors"
         >
           Download Document
         </button>
@@ -144,7 +144,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center">
-            <svg className="w-6 h-6 text-fire-primary mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-6 h-6 text-gray-900 dark:text-white mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -154,7 +154,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={handleDownload}
-              className="p-2 text-gray-600 dark:text-gray-400 hover:text-fire-primary hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
               title="Download Document"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -163,7 +163,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-gray-600 dark:text-gray-400 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
               title="Close Preview"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -203,7 +203,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({
               </button>
               <button
                 onClick={onClose}
-                className="bg-fire-primary hover:bg-fire-secondary text-white px-4 py-2 rounded-md transition-colors text-sm"
+                className="bg-gray-900 hover:bg-gray-700 dark:bg-white dark:hover:bg-gray-200 text-white dark:text-black px-4 py-2 rounded-md transition-colors text-sm"
               >
                 Close
               </button>

@@ -56,14 +56,14 @@ const SearchAndSort: React.FC<SearchAndSortProps> = ({
 
     if (sortOrder === 'asc') {
       return (
-        <svg className="w-4 h-4 text-fire-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
         </svg>
       );
     }
 
     return (
-      <svg className="w-4 h-4 text-fire-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-4 h-4 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
       </svg>
     );
@@ -85,7 +85,7 @@ const SearchAndSort: React.FC<SearchAndSortProps> = ({
               placeholder="Search cases by title, location, or status..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-fire-primary focus:border-fire-primary"
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-gray-900 dark:focus:border-white"
             />
           </div>
         </div>
@@ -99,7 +99,7 @@ const SearchAndSort: React.FC<SearchAndSortProps> = ({
             id="status-filter"
             value={statusFilter}
             onChange={(e) => onStatusFilterChange(e.target.value as StatusFilter)}
-            className="block px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-fire-primary focus:border-fire-primary text-sm"
+            className="block px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-gray-900 dark:focus:border-white text-sm"
           >
             <option value="all">All</option>
             <option value="Open">Open</option>
@@ -117,7 +117,7 @@ const SearchAndSort: React.FC<SearchAndSortProps> = ({
             onClick={() => handleSortFieldChange('created_at')}
             className={`flex items-center gap-1 px-3 py-1 text-sm rounded-md transition-colors ${
               sortField === 'created_at'
-                ? 'bg-fire-primary text-white'
+                ? 'bg-gray-900 dark:bg-white text-white dark:text-black'
                 : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
             }`}
           >
@@ -128,7 +128,7 @@ const SearchAndSort: React.FC<SearchAndSortProps> = ({
             onClick={() => handleSortFieldChange('updated_at')}
             className={`flex items-center gap-1 px-3 py-1 text-sm rounded-md transition-colors ${
               sortField === 'updated_at'
-                ? 'bg-fire-primary text-white'
+                ? 'bg-gray-900 dark:bg-white text-white dark:text-black'
                 : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
             }`}
           >
@@ -139,7 +139,7 @@ const SearchAndSort: React.FC<SearchAndSortProps> = ({
             onClick={() => handleSortFieldChange('title')}
             className={`flex items-center gap-1 px-3 py-1 text-sm rounded-md transition-colors ${
               sortField === 'title'
-                ? 'bg-fire-primary text-white'
+                ? 'bg-gray-900 dark:bg-white text-white dark:text-black'
                 : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
             }`}
           >
@@ -150,7 +150,7 @@ const SearchAndSort: React.FC<SearchAndSortProps> = ({
             onClick={() => handleSortFieldChange('location')}
             className={`flex items-center gap-1 px-3 py-1 text-sm rounded-md transition-colors ${
               sortField === 'location'
-                ? 'bg-fire-primary text-white'
+                ? 'bg-gray-900 dark:bg-white text-white dark:text-black'
                 : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
             }`}
           >
@@ -161,7 +161,7 @@ const SearchAndSort: React.FC<SearchAndSortProps> = ({
             onClick={() => handleSortFieldChange('status')}
             className={`flex items-center gap-1 px-3 py-1 text-sm rounded-md transition-colors ${
               sortField === 'status'
-                ? 'bg-fire-primary text-white'
+                ? 'bg-gray-900 dark:bg-white text-white dark:text-black'
                 : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
             }`}
           >

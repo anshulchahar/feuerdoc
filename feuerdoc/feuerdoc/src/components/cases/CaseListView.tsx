@@ -20,20 +20,20 @@ const CaseListView: React.FC<CaseListViewProps> = ({ caseData, onInfoClick, onEd
       case 'Completed':
         return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       case 'Closed':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200';
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
     }
   };
 
   return (
-    <div className="glass-card p-4 rounded-lg border hover:border-fire-primary transition-all duration-300 ease-in-out">
+    <div className="glass-card p-4 rounded-lg border hover:border-gray-900 dark:hover:border-white transition-all duration-300 ease-in-out">
       <div className="flex items-center justify-between">
         {/* Main Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-semibold text-fire-primary mb-1 truncate" title={caseData.title}>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 truncate" title={caseData.title}>
                 {caseData.title}
               </h3>
               <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-2">

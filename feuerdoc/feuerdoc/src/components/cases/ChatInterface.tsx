@@ -272,7 +272,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[80%] rounded-lg p-4 ${
                 message.type === 'user' 
-                  ? 'bg-fire-primary text-white' 
+                  ? 'bg-gray-900 dark:bg-white text-white dark:text-black' 
                   : message.type === 'report'
                   ? theme === 'light'
                     ? 'bg-green-100 text-green-900 border border-green-200'
@@ -321,7 +321,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                   : 'bg-gray-800 text-gray-100 border-gray-700'
               }`}>
                 <div className="flex items-center space-x-2">
-                  <svg className="animate-spin h-4 w-4 text-fire-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <svg className="animate-spin h-4 w-4 text-gray-900 dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
@@ -410,7 +410,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 onChange={handleInputChange}
                 onKeyPress={handleKeyPress}
                 placeholder="Add field notes, observations, actions taken, equipment used..."
-                className={`w-full p-3 pr-20 border rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-primary focus:border-fire-primary resize-none overflow-hidden ${
+                className={`w-full p-3 pr-20 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-gray-900 dark:focus:border-white resize-none overflow-hidden ${
                   theme === 'light' 
                     ? 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-500' 
                     : 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-400'
@@ -441,7 +441,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             <button
               onClick={handleSendMessage}
               disabled={!inputText.trim() && audioNotes.length === 0}
-              className="flex items-center justify-center w-10 h-10 bg-fire-primary hover:bg-fire-secondary disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white disabled:text-gray-500 rounded-lg transition-colors disabled:cursor-not-allowed"
+              className="flex items-center justify-center w-10 h-10 bg-gray-900 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-200 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white dark:text-black disabled:text-gray-500 rounded-lg transition-colors disabled:cursor-not-allowed"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

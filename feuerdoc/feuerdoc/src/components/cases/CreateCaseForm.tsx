@@ -100,7 +100,7 @@ const CreateCaseForm: React.FC<CreateCaseFormProps> = ({ onCaseCreated, onClose 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 p-1 text-gray-900 rounded-lg" style={{ backgroundColor: 'white', color: '#111827' }}>
       {error && (
-        <div className="p-3 mb-4 text-sm text-red-800 bg-red-100 border border-red-300 rounded-lg shadow-md">
+        <div className="p-3 mb-4 text-sm text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-md">
           <p className="font-semibold">Error:</p>
           <p>{error}</p>
         </div>
@@ -114,7 +114,7 @@ const CreateCaseForm: React.FC<CreateCaseFormProps> = ({ onCaseCreated, onClose 
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-3 border rounded-md placeholder-gray-500 focus:ring-2 focus:ring-fire-primary focus:border-fire-primary transition-colors duration-200"
+          className="w-full p-3 border rounded-md placeholder-gray-500 focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-gray-900 dark:focus:border-white transition-colors duration-200"
           placeholder="e.g., Structure Fire at Elm Street"
           required
           disabled={isLoading}
@@ -130,7 +130,7 @@ const CreateCaseForm: React.FC<CreateCaseFormProps> = ({ onCaseCreated, onClose 
           id="location"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          className="w-full p-3 border rounded-md placeholder-gray-500 focus:ring-2 focus:ring-fire-primary focus:border-fire-primary transition-colors duration-200"
+          className="w-full p-3 border rounded-md placeholder-gray-500 focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-gray-900 dark:focus:border-white transition-colors duration-200"
           placeholder="e.g., 123 Elm Street, Anytown"
           required
           disabled={isLoading}
@@ -146,7 +146,7 @@ const CreateCaseForm: React.FC<CreateCaseFormProps> = ({ onCaseCreated, onClose 
           id="initialReportFile"
           onChange={handleFileChange}
           accept=".pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-          className="w-full text-sm file:mr-4 file:py-2.5 file:px-5 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-fire-primary file:text-white hover:file:bg-fire-secondary file:transition-colors file:duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-fire-primary focus:border-fire-primary disabled:opacity-70"
+          className="w-full text-sm file:mr-4 file:py-2.5 file:px-5 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gray-900 dark:file:bg-white file:text-white dark:file:text-black hover:file:bg-gray-700 dark:hover:file:bg-gray-200 file:transition-colors file:duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-gray-900 dark:focus:border-white disabled:opacity-70"
           required
           disabled={isLoading}
           style={{ color: '#374151' }}
@@ -168,7 +168,7 @@ const CreateCaseForm: React.FC<CreateCaseFormProps> = ({ onCaseCreated, onClose 
         <button
           type="submit"
           disabled={isLoading}
-          className="px-5 py-2.5 text-sm font-medium text-white bg-fire-primary hover:bg-fire-secondary rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          className="px-5 py-2.5 text-sm font-medium text-white dark:text-black bg-gray-900 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-200 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
         >
           {isLoading ? (
             <>

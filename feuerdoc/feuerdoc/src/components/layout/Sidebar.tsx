@@ -58,7 +58,7 @@ const Sidebar = () => {
   return (
     <aside className="w-72 glass-sidebar p-5 flex flex-col h-screen shadow-lg transition-colors duration-300">
       <div className="mb-6 flex items-center justify-between">
-        <Link href="/" className="text-3xl font-bold text-fire-primary hover:text-fire-secondary transition-colors">
+        <Link href="/" className="text-3xl font-bold text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
           FeuerDoc
         </Link>
         <ThemeToggle />

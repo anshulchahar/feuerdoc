@@ -5,9 +5,9 @@
 @tailwind utilities;
 
 :root {
-  --fire-red-primary: #FF4500;
-  --fire-red-secondary: #FF0000;
-  --fire-red-tertiary: #B22222;
+  --fire-red-primary: #000000;
+  --fire-red-secondary: #333333;
+  --fire-red-tertiary: #666666;
 }
 
 /* Light theme variables */
@@ -28,6 +28,9 @@
   --sidebar-bg: rgba(255, 255, 255, 0.95);
   --card-bg: rgba(255, 255, 255, 0.85);
   --card-border: rgba(148, 163, 184, 0.2);
+  --fire-red-primary: #000000;
+  --fire-red-secondary: #333333;
+  --fire-red-tertiary: #666666;
 }
 
 /* Dark theme variables */
@@ -48,6 +51,9 @@
   --sidebar-bg: #111827;
   --card-bg: #1f2937;
   --card-border: #374151;
+  --fire-red-primary: #ffffff;
+  --fire-red-secondary: #e5e7eb;
+  --fire-red-tertiary: #d1d5db;
 }
 
 @theme inline {
