@@ -15,20 +15,41 @@ const CaseCard: React.FC<CaseCardProps> = ({ caseData, onInfoClick, onEditClick 
     <div
       className="glass-card p-5 rounded-xl border hover:border-gray-900 dark:hover:border-white transition-all duration-300 ease-in-out transform hover:-translate-y-1 relative"
     >
-      <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2 truncate" title={caseData.title} style={{color: '#000000'}}>{caseData.title}</h3>
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-1 truncate" title={caseData.location}>Location: {caseData.location}</p>
-      <div className="flex justify-between items-center mb-3">
-        <span className={`text-xs px-2 py-0.5 rounded-full ${caseData.status === 'Open' ? 'bg-blue-500 text-white' : caseData.status === 'InProgress' ? 'bg-yellow-500 text-black' : caseData.status === 'Completed' ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'}`}>
-          {caseData.status}
-        </span>
-        <div className="flex gap-2">
+      <div className="flex flex-col gap-3">
+        {/* Header with title and status */}
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="text-lg font-bold text-gray-800 dark:text-white truncate flex-1" title={caseData.title} style={{color: '#000000'}}>{caseData.title}</h3>
+          <span className={`text-xs px-3 py-1.5 rounded-full whitespace-nowrap ${caseData.status === 'Open' ? 'bg-blue-500 text-white' : caseData.status === 'InProgress' ? 'bg-yellow-500 text-black' : caseData.status === 'Completed' ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'}`}>
+            {caseData.status}
+          </span>
+        </div>
+        
+        {/* Location */}
+        <div className="flex items-center gap-2">
+          <svg className="w-4 h-4 text-gray-500 dark:text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <p className="text-sm text-gray-600 dark:text-gray-400 truncate" title={caseData.location}>{caseData.location}</p>
+        </div>
+        
+        {/* Created date */}
+        <div className="flex items-center gap-2">
+          <svg className="w-4 h-4 text-gray-500 dark:text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a1 1 0 011 1v2a1 1 0 01-1 1h-.5M8 7H3a1 1 0 00-1 1v2a1 1 0 001 1h.5M8 7v8a1 1 0 001 1h6a1 1 0 001-1V7" />
+          </svg>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{new Date(caseData.created_at).toLocaleDateString()}</p>
+        </div>
+        
+        {/* Actions */}
+        <div className="flex justify-end gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
           {/* Info icon for modal */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               onInfoClick();
             }}
-            className="p-1.5 rounded-full bg-gray-900 hover:bg-gray-700 text-white transition-colors duration-200"
+            className="p-2 rounded-full bg-black hover:bg-gray-800 text-white transition-colors duration-200"
             title="View Details"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -38,7 +59,7 @@ const CaseCard: React.FC<CaseCardProps> = ({ caseData, onInfoClick, onEditClick 
           {/* Edit/pencil icon for navigation */}
           <Link href={`/cases/${caseData.id}`}>
             <button
-              className="p-1.5 rounded-full bg-gray-900 hover:bg-gray-700 dark:bg-white dark:hover:bg-gray-200 text-white dark:text-black transition-colors duration-200"
+              className="p-2 rounded-full bg-black hover:bg-gray-800 text-white transition-colors duration-200"
               title="Edit Case"
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">

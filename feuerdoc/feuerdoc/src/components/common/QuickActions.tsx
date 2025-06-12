@@ -31,18 +31,18 @@ const QuickActions: React.FC<QuickActionsProps> = ({
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-6 rounded-2xl mb-6 shadow-sm backdrop-blur-sm">
+    <div className="bg-black dark:bg-black border border-gray-800 dark:border-gray-800 px-6 py-3 rounded-full mb-6 shadow-sm backdrop-blur-sm">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         {/* Quick Status Filters */}
-        <div className="flex flex-wrap gap-3">
-          <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 self-center mr-3">
+        <div className="flex flex-wrap gap-2">
+          <span className="text-sm font-semibold text-white dark:text-white self-center mr-2">
             Quick filters:
           </span>
           {statusButtons.map((button) => (
             <button
               key={button.value}
               onClick={() => onStatusFilter(button.value)}
-              className={`px-4 py-2 text-sm font-medium text-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105 ${
+              className={`px-3 py-1.5 text-xs font-medium text-white rounded-full transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105 ${
                 currentFilters.status === button.value
                   ? button.color.replace('hover:', '') + ' shadow-md scale-105'
                   : button.color + ' hover:shadow-lg'
@@ -54,20 +54,20 @@ const QuickActions: React.FC<QuickActionsProps> = ({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {hasActiveFilters && (
             <button
               onClick={onClearFilters}
-              className="text-sm text-gray-900 hover:text-gray-700 dark:text-white dark:hover:text-gray-200 transition-all duration-200 flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 font-medium"
+              className="text-xs text-white hover:text-gray-200 dark:text-white dark:hover:text-gray-200 transition-all duration-200 flex items-center gap-1 px-2 py-1 rounded-full hover:bg-gray-800 dark:hover:bg-gray-800 font-medium"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
               Clear filters
             </button>
           )}
           
-          <div className="text-sm font-medium text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-700/50 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-600">
+          <div className="text-xs font-medium text-white dark:text-white bg-gray-800 dark:bg-gray-800 px-2 py-1 rounded-full border border-gray-700 dark:border-gray-700">
             {filteredCases} / {totalCases} cases
           </div>
         </div>

@@ -197,14 +197,14 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
     <>
       {/* Quick Actions Bar with enhanced functionality */}
       <div 
-        className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-6 rounded-2xl mb-6 shadow-sm backdrop-blur-sm"
+        className="bg-black dark:bg-black border border-gray-800 dark:border-gray-800 px-6 py-3 rounded-full mb-6 shadow-sm backdrop-blur-sm"
       >
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           {/* Search Section */}
           <div className="flex-1 w-full lg:max-w-md">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
@@ -213,17 +213,17 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
                 placeholder="Search cases by title, location, or status..."
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="block w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-gray-900 dark:focus:border-white transition-all duration-200 shadow-sm focus:shadow-md"
+                className="block w-full pl-9 pr-4 py-1.5 border border-gray-700 dark:border-gray-700 rounded-full bg-gray-800 dark:bg-gray-800 text-white dark:text-white placeholder-gray-400 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white dark:focus:ring-white focus:border-white dark:focus:border-white transition-all duration-200 shadow-sm focus:shadow-md text-xs"
               />
             </div>
           </div>
 
           {/* View Toggle */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
             
             {/* Results Summary */}
-            <div className="text-sm text-gray-600 dark:text-gray-400">
+            <div className="text-xs text-white dark:text-white bg-gray-800 px-2 py-1 rounded-full">
               {filteredAndSortedCases.length} of {cases.length} cases
             </div>
           </div>
