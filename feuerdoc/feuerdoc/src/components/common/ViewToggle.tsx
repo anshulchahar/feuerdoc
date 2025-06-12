@@ -12,8 +12,7 @@ interface ViewToggleProps {
 const ViewToggle: React.FC<ViewToggleProps> = ({ viewMode, onViewModeChange }) => {
   return (
     <div 
-      className="flex items-center force-light-mode light-mode-container !bg-white dark:!bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-1.5 shadow-sm backdrop-blur-sm"
-      style={{ backgroundColor: 'white', borderColor: '#f3f4f6' }}
+      className="flex items-center bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-1.5 shadow-sm backdrop-blur-sm"
     >
       <button
         onClick={() => onViewModeChange('grid')}

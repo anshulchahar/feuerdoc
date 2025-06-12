@@ -9,6 +9,7 @@ import DocumentPreview from '@/components/common/DocumentPreview';
 import QuickActions from '@/components/common/QuickActions';
 import ViewToggle, { ViewMode } from '@/components/common/ViewToggle';
 import CaseListView from './CaseListView';
+import { useTheme } from '@/contexts/ThemeContext';
 
 // Define types locally since we removed SearchAndSort
 export type StatusFilter = 'all' | 'Open' | 'InProgress' | 'Completed' | 'Closed';
@@ -23,6 +24,7 @@ export interface CaseListRef {
 }
 
 const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], onCaseSelected }, ref) => {
+  const { theme } = useTheme();
   const [cases, setCases] = useState<Case[]>(initialCases);
   const [loading, setLoading] = useState(!initialCases.length);
   const [error, setError] = useState<string | null>(null);
@@ -195,8 +197,7 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
     <>
       {/* Quick Actions Bar with enhanced functionality */}
       <div 
-        className="search-container light-mode-container force-light-mode !bg-white dark:!bg-gray-800 border border-gray-100 dark:border-gray-700 p-6 rounded-2xl mb-6 shadow-sm backdrop-blur-sm"
-        style={{ backgroundColor: 'white', borderColor: '#f3f4f6' }}
+        className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-6 rounded-2xl mb-6 shadow-sm backdrop-blur-sm"
       >
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
           {/* Search Section */}
@@ -213,7 +214,6 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 className="block w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-gray-900 dark:focus:border-white transition-all duration-200 shadow-sm focus:shadow-md"
-                style={{ backgroundColor: 'white', borderColor: '#e5e7eb', color: '#111827' }}
               />
             </div>
           </div>
@@ -288,14 +288,20 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
           onClose={() => setIsDetailModalOpen(false)}
           title={`Case Details: ${selectedCase.title}`}
         >
-          <div className="space-y-3 p-1" style={{ color: '#111827' }}>
-            <p><strong style={{ color: '#374151' }}>Location:</strong> {selectedCase.location}</p>
-            <p><strong style={{ color: '#374151' }}>Status:</strong> {selectedCase.status}</p>
-            <p><strong style={{ color: '#374151' }}>Initial Report:</strong></p>
+          <div className={`space-y-3 p-1 ${
+            theme === 'light' ? 'text-gray-900' : 'text-white'
+          }`}>
+            <p><strong className={theme === 'light' ? 'text-gray-700' : 'text-gray-300'}>Location:</strong> {selectedCase.location}</p>
+            <p><strong className={theme === 'light' ? 'text-gray-700' : 'text-gray-300'}>Status:</strong> {selectedCase.status}</p>
+            <p><strong className={theme === 'light' ? 'text-gray-700' : 'text-gray-300'}>Initial Report:</strong></p>
             <div className="flex gap-2 ml-2">
               <button
                 onClick={() => setIsPreviewOpen(true)}
-                className="bg-gray-900 hover:bg-gray-700 dark:bg-white dark:hover:bg-gray-200 text-white dark:text-black px-3 py-1 rounded-md transition-colors text-sm"
+                className={`px-3 py-1 rounded-md transition-colors text-sm ${
+                  theme === 'light'
+                    ? 'bg-gray-900 hover:bg-gray-700 text-white'
+                    : 'bg-white hover:bg-gray-200 text-black'
+                }`}
               >
                 Preview Report
               </button>
@@ -308,15 +314,15 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
                 Download
               </a>
             </div>
-            <p><strong style={{ color: '#374151' }}>Created:</strong> {new Date(selectedCase.created_at).toLocaleString()}</p>
+            <p><strong className={theme === 'light' ? 'text-gray-700' : 'text-gray-300'}>Created:</strong> {new Date(selectedCase.created_at).toLocaleString()}</p>
             {selectedCase.final_report_content && (
               <div>
-                <strong style={{ color: '#374151' }}>Final Report:</strong>
-                <div className="mt-1 p-2 border rounded-md max-h-40 overflow-y-auto" style={{ 
-                  borderColor: '#d1d5db', 
-                  backgroundColor: '#f9fafb',
-                  color: '#111827'
-                }}>
+                <strong className={theme === 'light' ? 'text-gray-700' : 'text-gray-300'}>Final Report:</strong>
+                <div className={`mt-1 p-2 border rounded-md max-h-40 overflow-y-auto ${
+                  theme === 'light'
+                    ? 'border-gray-200 bg-gray-50 text-gray-900'
+                    : 'border-gray-600 bg-gray-700 text-white'
+                }`}>
                   {selectedCase.final_report_content}
                 </div>
               </div>

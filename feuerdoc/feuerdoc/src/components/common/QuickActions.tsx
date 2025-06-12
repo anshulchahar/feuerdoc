@@ -31,7 +31,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-6 rounded-2xl mb-6 shadow-sm backdrop-blur-sm force-light-mode light-mode-container !bg-white" style={{ backgroundColor: 'white', borderColor: '#f3f4f6' }}>
+    <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-6 rounded-2xl mb-6 shadow-sm backdrop-blur-sm">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         {/* Quick Status Filters */}
         <div className="flex flex-wrap gap-3">

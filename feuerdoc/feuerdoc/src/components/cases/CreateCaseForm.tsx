@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { Case } from '@/types';
 import { useRouter } from 'next/navigation'; // For potential redirect after creation
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface CreateCaseFormProps {
   onCaseCreated: (newCase: Case) => void;
@@ -11,6 +12,7 @@ interface CreateCaseFormProps {
 }
 
 const CreateCaseForm: React.FC<CreateCaseFormProps> = ({ onCaseCreated, onClose }) => {
+  const { theme } = useTheme();
   const [title, setTitle] = useState('');
   const [location, setLocation] = useState('');
   const [initialReportFile, setInitialReportFile] = useState<File | null>(null);
@@ -98,15 +100,23 @@ const CreateCaseForm: React.FC<CreateCaseFormProps> = ({ onCaseCreated, onClose 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 p-1 text-gray-900 rounded-lg" style={{ backgroundColor: 'white', color: '#111827' }}>
+    <form onSubmit={handleSubmit} className={`space-y-6 p-1 rounded-lg ${
+      theme === 'light' ? 'text-gray-900 bg-white' : 'text-white bg-gray-800'
+    }`}>
       {error && (
-        <div className="p-3 mb-4 text-sm text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-md">
+        <div className={`p-3 mb-4 text-sm rounded-lg shadow-md border ${
+          theme === 'light' 
+            ? 'text-gray-800 bg-gray-100 border-gray-300'
+            : 'text-gray-200 bg-gray-800 border-gray-600'
+        }`}>
           <p className="font-semibold">Error:</p>
           <p>{error}</p>
         </div>
       )}
       <div>
-        <label htmlFor="title" className="block text-sm font-medium mb-1" style={{ color: '#374151' }}>
+        <label htmlFor="title" className={`block text-sm font-medium mb-1 ${
+          theme === 'light' ? 'text-gray-700' : 'text-gray-300'
+        }`}>
           Case Title
         </label>
         <input
@@ -114,15 +124,20 @@ const CreateCaseForm: React.FC<CreateCaseFormProps> = ({ onCaseCreated, onClose 
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-3 border rounded-md placeholder-gray-500 focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-gray-900 dark:focus:border-white transition-colors duration-200"
+          className={`w-full p-3 border rounded-md placeholder-gray-500 transition-colors duration-200 ${
+            theme === 'light'
+              ? 'border-gray-300 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-gray-900 focus:border-gray-900'
+              : 'border-gray-600 bg-gray-800 text-white focus:ring-2 focus:ring-white focus:border-white'
+          }`}
           placeholder="e.g., Structure Fire at Elm Street"
           required
           disabled={isLoading}
-          style={{ backgroundColor: 'white', color: '#111827', borderColor: '#d1d5db' }}
         />
       </div>
       <div>
-        <label htmlFor="location" className="block text-sm font-medium mb-1" style={{ color: '#374151' }}>
+        <label htmlFor="location" className={`block text-sm font-medium mb-1 ${
+          theme === 'light' ? 'text-gray-700' : 'text-gray-300'
+        }`}>
           Location / Address
         </label>
         <input
@@ -130,15 +145,20 @@ const CreateCaseForm: React.FC<CreateCaseFormProps> = ({ onCaseCreated, onClose 
           id="location"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          className="w-full p-3 border rounded-md placeholder-gray-500 focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-gray-900 dark:focus:border-white transition-colors duration-200"
+          className={`w-full p-3 border rounded-md placeholder-gray-500 transition-colors duration-200 ${
+            theme === 'light'
+              ? 'border-gray-300 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-gray-900 focus:border-gray-900'
+              : 'border-gray-600 bg-gray-800 text-white focus:ring-2 focus:ring-white focus:border-white'
+          }`}
           placeholder="e.g., 123 Elm Street, Anytown"
           required
           disabled={isLoading}
-          style={{ backgroundColor: 'white', color: '#111827', borderColor: '#d1d5db' }}
         />
       </div>
       <div>
-        <label htmlFor="initialReportFile" className="block text-sm font-medium mb-1" style={{ color: '#374151' }}>
+        <label htmlFor="initialReportFile" className={`block text-sm font-medium mb-1 ${
+          theme === 'light' ? 'text-gray-700' : 'text-gray-300'
+        }`}>
           Initial Contact Report (PDF, DOC, DOCX)
         </label>
         <input
@@ -146,33 +166,45 @@ const CreateCaseForm: React.FC<CreateCaseFormProps> = ({ onCaseCreated, onClose 
           id="initialReportFile"
           onChange={handleFileChange}
           accept=".pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-          className="w-full text-sm file:mr-4 file:py-2.5 file:px-5 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gray-900 dark:file:bg-white file:text-white dark:file:text-black hover:file:bg-gray-700 dark:hover:file:bg-gray-200 file:transition-colors file:duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-gray-900 dark:focus:border-white disabled:opacity-70"
+          className={`w-full text-sm cursor-pointer focus:outline-none disabled:opacity-70 ${
+            theme === 'light'
+              ? 'file:mr-4 file:py-2.5 file:px-5 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gray-900 file:text-white hover:file:bg-gray-700 file:transition-colors file:duration-200 focus:ring-2 focus:ring-gray-900 focus:border-gray-900 text-gray-700'
+              : 'file:mr-4 file:py-2.5 file:px-5 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-white file:text-black hover:file:bg-gray-200 file:transition-colors file:duration-200 focus:ring-2 focus:ring-white focus:border-white text-gray-300'
+          }`}
           required
           disabled={isLoading}
-          style={{ color: '#374151' }}
         />
         {initialReportFile && (
-          <p className="mt-2 text-xs" style={{ color: '#6b7280' }}>Selected: {initialReportFile.name}</p>
+          <p className={`mt-2 text-xs ${
+            theme === 'light' ? 'text-gray-500' : 'text-gray-400'
+          }`}>Selected: {initialReportFile.name}</p>
         )}
       </div>
       <div className="flex justify-end items-center space-x-4 pt-2">
         <button
           type="button"
           onClick={onClose}
+          className={`px-5 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+            theme === 'light'
+              ? 'text-gray-600 bg-gray-200 hover:bg-gray-300'
+              : 'text-gray-400 bg-gray-600 hover:bg-gray-500'
+          }`}
           disabled={isLoading}
-          className="px-5 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ color: '#6b7280', backgroundColor: '#e5e7eb' }}
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          className="px-5 py-2.5 text-sm font-medium text-white dark:text-black bg-gray-900 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-200 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          className={`px-5 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center ${
+            theme === 'light'
+              ? 'text-white bg-gray-900 hover:bg-gray-700'
+              : 'text-black bg-white hover:bg-gray-200'
+          }`}
         >
           {isLoading ? (
             <>
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>

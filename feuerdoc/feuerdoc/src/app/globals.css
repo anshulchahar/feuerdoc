@@ -178,4 +178,27 @@ body {
   .force-light-mode label {
     color: #374151 !important;
   }
+  
+  /* Modal specific styles */
+  .modal-container {
+    background-color: white !important;
+    color: #111827 !important;
+  }
+  
+  .dark .modal-container {
+    background-color: #374151 !important;
+    color: white !important;
+  }
+  
+  /* Ensure modals are correctly themed */
+  html.light .modal-container,
+  html:not(.dark) .modal-container {
+    background-color: white !important;
+    color: #111827 !important;
+  }
+  
+  html.dark .modal-container {
+    background-color: #374151 !important;
+    color: white !important;
+  }
 }
