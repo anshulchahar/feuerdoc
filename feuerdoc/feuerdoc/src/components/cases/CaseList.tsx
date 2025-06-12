@@ -1,15 +1,21 @@
 'use client';
 
-import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
+import React, { useEffect, useState, useImperativeHandle, forwardRef, useMemo } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { Case } from '@/types';
 import CaseCard from './CaseCard';
-import Modal from '@/components/common/Modal'; // For case detail view
+import Modal from '@/components/common/Modal';
 import DocumentPreview from '@/components/common/DocumentPreview';
+import QuickActions from '@/components/common/QuickActions';
+import ViewToggle, { ViewMode } from '@/components/common/ViewToggle';
+import CaseListView from './CaseListView';
+
+// Define types locally since we removed SearchAndSort
+export type StatusFilter = 'all' | 'Open' | 'InProgress' | 'Completed' | 'Closed';
 
 interface CaseListProps {
-  initialCases?: Case[]; // For server-side pre-fetching if desired
-  onCaseSelected?: (caseData: Case) => void; // Callback when a case is selected from the list
+  initialCases?: Case[];
+  onCaseSelected?: (caseData: Case) => void;
 }
 
 export interface CaseListRef {
@@ -23,6 +29,11 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
   const [selectedCase, setSelectedCase] = useState<Case | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
+  // Search and filter state (simplified - removed sort controls)
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   const fetchCases = async () => {
     setLoading(true);
@@ -122,6 +133,43 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
     };
   }, []); // Empty dependency array
 
+  // Memoized filtered cases (removed sorting functionality)
+  const filteredAndSortedCases = useMemo(() => {
+    let filtered = cases;
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((caseItem) =>
+        caseItem.title.toLowerCase().includes(query) ||
+        caseItem.location.toLowerCase().includes(query) ||
+        caseItem.status.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply status filter
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter((caseItem) => caseItem.status === statusFilter);
+    }
+
+    // Default sort by created_at desc (most recent first)
+    return filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  }, [cases, searchQuery, statusFilter]);
+
+  // Handlers for search and filter (removed sort handlers)
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  const handleStatusFilterChange = (status: StatusFilter) => {
+    setStatusFilter(status);
+  };
+
+  const handleClearFilters = () => {
+    setSearchQuery('');
+    setStatusFilter('all');
+  };
+
   const handleInfoClick = (caseData: Case) => {
     setSelectedCase(caseData);
     setIsDetailModalOpen(true);
@@ -145,25 +193,87 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
 
   return (
     <>
-      {cases.length === 0 && !loading ? (
+      {/* Quick Actions Bar with enhanced functionality */}
+      <div className="glass-card p-4 rounded-lg shadow-sm mb-6">
+        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+          {/* Search Section */}
+          <div className="flex-1 w-full lg:max-w-md">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Search cases by title, location, or status..."
+                value={searchQuery}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-fire-primary focus:border-fire-primary"
+              />
+            </div>
+          </div>
+
+          {/* View Toggle */}
+          <div className="flex items-center gap-4">
+            <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+            
+            {/* Results Summary */}
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              {filteredAndSortedCases.length} of {cases.length} cases
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Status Filters */}
+      <QuickActions
+        onStatusFilter={setStatusFilter}
+        onClearFilters={handleClearFilters}
+        totalCases={cases.length}
+        filteredCases={filteredAndSortedCases.length}
+        currentFilters={{
+          search: searchQuery,
+          status: statusFilter,
+        }}
+      />
+
+      {filteredAndSortedCases.length === 0 && !loading ? (
         <div className="text-center py-10 px-6 bg-brand-gray-dark rounded-lg shadow-xl">
           <svg className="mx-auto h-12 w-12 text-brand-gray-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
           </svg>
-          <h3 className="mt-2 text-lg font-medium text-brand-white">No cases found</h3>
+          <h3 className="mt-2 text-lg font-medium text-brand-white">
+            {cases.length === 0 ? 'No cases found' : 'No matching cases'}
+          </h3>
           <p className="mt-1 text-sm text-brand-gray-light">
-            Get started by creating a new case.
+            {cases.length === 0 
+              ? 'Get started by creating a new case.'
+              : 'Try adjusting your search terms or filters.'
+            }
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {cases.map((caseItem) => (
-            <CaseCard 
-              key={caseItem.id} 
-              caseData={caseItem} 
-              onInfoClick={() => handleInfoClick(caseItem)}
-              onEditClick={() => {/* Navigation handled by Link in CaseCard */}}
-            />
+        <div className={viewMode === 'grid' 
+          ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          : "space-y-4"
+        }>
+          {filteredAndSortedCases.map((caseItem) => (
+            viewMode === 'grid' ? (
+              <CaseCard 
+                key={caseItem.id} 
+                caseData={caseItem} 
+                onInfoClick={() => handleInfoClick(caseItem)}
+                onEditClick={() => {}}
+              />
+            ) : (
+              <CaseListView
+                key={caseItem.id}
+                caseData={caseItem}
+                onInfoClick={() => handleInfoClick(caseItem)}
+                onEditClick={() => {}}
+              />
+            )
           ))}
         </div>
       )}
