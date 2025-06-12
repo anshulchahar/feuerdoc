@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase/client';
 import { Case } from '@/types';
 import CaseCard from './CaseCard';
 import Modal from '@/components/common/Modal'; // For case detail view
+import DocumentPreview from '@/components/common/DocumentPreview';
 
 interface CaseListProps {
   initialCases?: Case[]; // For server-side pre-fetching if desired
@@ -17,6 +18,7 @@ const CaseList: React.FC<CaseListProps> = ({ initialCases = [], onCaseSelected }
   const [error, setError] = useState<string | null>(null);
   const [selectedCase, setSelectedCase] = useState<Case | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -165,16 +167,23 @@ const CaseList: React.FC<CaseListProps> = ({ initialCases = [], onCaseSelected }
           <div className="space-y-3 text-brand-gray-light p-1">
             <p><strong className="text-brand-gray-light">Location:</strong> {selectedCase.location}</p>
             <p><strong className="text-brand-gray-light">Status:</strong> {selectedCase.status}</p>
-            <p><strong className="text-brand-gray-light">Initial Report:</strong> 
+            <p><strong className="text-brand-gray-light">Initial Report:</strong></p>
+            <div className="flex gap-2 ml-2">
+              <button
+                onClick={() => setIsPreviewOpen(true)}
+                className="bg-fire-primary hover:bg-fire-secondary text-white px-3 py-1 rounded-md transition-colors text-sm"
+              >
+                Preview Report
+              </button>
               <a 
                 href={supabase.storage.from('case-files').getPublicUrl(selectedCase.initial_report_path).data.publicUrl}
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="text-fire-primary hover:text-fire-secondary underline ml-2"
+                className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-md transition-colors text-sm"
               >
-                View Report
+                Download
               </a>
-            </p>
+            </div>
             <p><strong className="text-brand-gray-light">Created:</strong> {new Date(selectedCase.created_at).toLocaleString()}</p> {/* Corrected to snake_case */}
             <p><strong className="text-brand-gray-light">Last Updated:</strong> {new Date(selectedCase.updated_at).toLocaleString()}</p> {/* Corrected to snake_case */}
             {selectedCase.final_report_content && (
@@ -188,6 +197,16 @@ const CaseList: React.FC<CaseListProps> = ({ initialCases = [], onCaseSelected }
             {/* Add more details or actions here, e.g., edit, generate report button */}
           </div>
         </Modal>
+      )}
+
+      {/* Document Preview Modal */}
+      {selectedCase?.initial_report_path && (
+        <DocumentPreview
+          filePath={selectedCase.initial_report_path}
+          fileName={selectedCase.initial_report_path.split('/').pop()}
+          isOpen={isPreviewOpen}
+          onClose={() => setIsPreviewOpen(false)}
+        />
       )}
     </>
   );

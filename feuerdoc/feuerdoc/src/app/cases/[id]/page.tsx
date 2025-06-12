@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { Case } from '@/types';
 import Link from 'next/link';
+import DocumentPreview from '@/components/common/DocumentPreview';
 // import dynamic from 'next/dynamic';
 
 // const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -244,6 +245,7 @@ export default function CaseDetailPage() {
   const [audioNotes, setAudioNotes] = useState<Blob[]>([]);
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
   const [finalReport, setFinalReport] = useState<string | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   // const [editedReport, setEditedReport] = useState<string>('');
 
   useEffect(() => {
@@ -392,21 +394,32 @@ export default function CaseDetailPage() {
             <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Initial Contact Report</h3>
             <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">This document contains the initial incident information that will be processed and combined with your field notes to generate the final report.</p>
             {caseData.initial_report_path ? (
-              <a 
-                href={initialReportUrl} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-fire-primary hover:underline hover:text-fire-secondary transition-colors inline-flex items-center"
-              >
-                View Initial Report Document
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <button
+                  onClick={() => setIsPreviewOpen(true)}
+                  className="flex-1 bg-fire-primary hover:bg-fire-secondary text-white px-4 py-2 rounded-md transition-colors inline-flex items-center justify-center"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  Preview Document
+                </button>
+                <a 
+                  href={initialReportUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors inline-flex items-center justify-center"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                  </svg>
+                  Download
+                </a>
+              </div>
             ) : (
               <p className="text-gray-500">No initial report document uploaded.</p>
             )}
-            {/* TODO: Consider embedding PDF/DOC viewer if feasible and necessary */}
           </div>
 
           <div className="mb-6">
@@ -497,6 +510,16 @@ export default function CaseDetailPage() {
           &larr; Back to Dashboard
         </Link>
       </div>
+
+      {/* Document Preview Modal */}
+      {caseData?.initial_report_path && (
+        <DocumentPreview
+          filePath={caseData.initial_report_path}
+          fileName={caseData.initial_report_path.split('/').pop()}
+          isOpen={isPreviewOpen}
+          onClose={() => setIsPreviewOpen(false)}
+        />
+      )}
     </div>
   );
 }
