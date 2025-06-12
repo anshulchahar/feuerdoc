@@ -15,7 +15,7 @@ const CaseCard: React.FC<CaseCardProps> = ({ caseData, onInfoClick, onEditClick 
     <div
       className="glass-card p-5 rounded-xl border hover:border-gray-900 dark:hover:border-white transition-all duration-300 ease-in-out transform hover:-translate-y-1 relative"
     >
-      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 truncate" title={caseData.title}>{caseData.title}</h3>
+      <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2 truncate" title={caseData.title} style={{color: '#000000'}}>{caseData.title}</h3>
       <p className="text-sm text-gray-600 dark:text-gray-400 mb-1 truncate" title={caseData.location}>Location: {caseData.location}</p>
       <div className="flex justify-between items-center mb-3">
         <span className={`text-xs px-2 py-0.5 rounded-full ${caseData.status === 'Open' ? 'bg-blue-500 text-white' : caseData.status === 'InProgress' ? 'bg-yellow-500 text-black' : caseData.status === 'Completed' ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'}`}>
