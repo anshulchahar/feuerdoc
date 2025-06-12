@@ -110,7 +110,7 @@ const CaseList: React.FC<CaseListProps> = ({ initialCases = [], onCaseSelected }
     };
   }, []); // Empty dependency array
 
-  const handleCardClick = (caseData: Case) => {
+  const handleInfoClick = (caseData: Case) => {
     setSelectedCase(caseData);
     setIsDetailModalOpen(true);
     if (onCaseSelected) {
@@ -146,7 +146,12 @@ const CaseList: React.FC<CaseListProps> = ({ initialCases = [], onCaseSelected }
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {cases.map((caseItem) => (
-            <CaseCard key={caseItem.id} caseData={caseItem} onClick={() => handleCardClick(caseItem)} />
+            <CaseCard 
+              key={caseItem.id} 
+              caseData={caseItem} 
+              onInfoClick={() => handleInfoClick(caseItem)}
+              onEditClick={() => {/* Navigation handled by Link in CaseCard */}}
+            />
           ))}
         </div>
       )}
