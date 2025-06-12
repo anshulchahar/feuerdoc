@@ -288,10 +288,10 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
           onClose={() => setIsDetailModalOpen(false)}
           title={`Case Details: ${selectedCase.title}`}
         >
-          <div className="space-y-3 text-brand-gray-light p-1">
-            <p><strong className="text-brand-gray-light">Location:</strong> {selectedCase.location}</p>
-            <p><strong className="text-brand-gray-light">Status:</strong> {selectedCase.status}</p>
-            <p><strong className="text-brand-gray-light">Initial Report:</strong></p>
+          <div className="space-y-3 p-1" style={{ color: '#111827' }}>
+            <p><strong style={{ color: '#374151' }}>Location:</strong> {selectedCase.location}</p>
+            <p><strong style={{ color: '#374151' }}>Status:</strong> {selectedCase.status}</p>
+            <p><strong style={{ color: '#374151' }}>Initial Report:</strong></p>
             <div className="flex gap-2 ml-2">
               <button
                 onClick={() => setIsPreviewOpen(true)}
@@ -308,12 +308,16 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
                 Download
               </a>
             </div>
-            <p><strong className="text-brand-gray-light">Created:</strong> {new Date(selectedCase.created_at).toLocaleString()}</p> {/* Corrected to snake_case */}
-            <p><strong className="text-brand-gray-light">Last Updated:</strong> {new Date(selectedCase.updated_at).toLocaleString()}</p> {/* Corrected to snake_case */}
+            <p><strong style={{ color: '#374151' }}>Created:</strong> {new Date(selectedCase.created_at).toLocaleString()}</p>
+            <p><strong style={{ color: '#374151' }}>Last Updated:</strong> {new Date(selectedCase.updated_at).toLocaleString()}</p>
             {selectedCase.final_report_content && (
               <div>
-                <strong className="text-brand-gray-light">Final Report:</strong>
-                <div className="mt-1 p-2 border border-brand-gray-medium rounded-md bg-brand-gray-dark max-h-40 overflow-y-auto">
+                <strong style={{ color: '#374151' }}>Final Report:</strong>
+                <div className="mt-1 p-2 border rounded-md max-h-40 overflow-y-auto" style={{ 
+                  borderColor: '#d1d5db', 
+                  backgroundColor: '#f9fafb',
+                  color: '#111827'
+                }}>
                   {selectedCase.final_report_content}
                 </div>
               </div>
