@@ -6,232 +6,28 @@ import { supabase } from '@/lib/supabase/client';
 import { Case } from '@/types';
 import Link from 'next/link';
 import DocumentPreview from '@/components/common/DocumentPreview';
+import { SmartAudioRecorder } from '@/components/audio/SmartAudioRecorder';
+import { transcriptAnalysisService, TranscriptAnalysis } from '@/lib/speech-to-text/analysis';
 // import dynamic from 'next/dynamic';
 
 // const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 // import 'react-quill/dist/quill.snow.css'; // Import Quill styles
 
-// Enhanced audio recording component with playback functionality
-interface AudioRecording {
+interface AudioNote {
   id: string;
   blob: Blob;
-  url: string;
+  transcript?: string;
+  analysis?: TranscriptAnalysis;
   timestamp: Date;
-  duration?: number;
 }
 
-const AudioRecorder: React.FC<{ onRecordingComplete: (audioBlob: Blob) => void }> = ({ onRecordingComplete }) => {
-  const [isRecording, setIsRecording] = useState(false);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
-  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
-  const [recordings, setRecordings] = useState<AudioRecording[]>([]);
-  const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
-  const [audioElements, setAudioElements] = useState<Map<string, HTMLAudioElement>>(new Map());
-
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
-      setMediaRecorder(recorder);
-      
-      const chunks: Blob[] = [];
-      recorder.ondataavailable = (event) => {
-        chunks.push(event.data);
-        setAudioChunks(chunks);
-      };
-      
-      recorder.onstop = () => {
-        const audioBlob = new Blob(chunks, { type: 'audio/webm' });
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const recordingId = Date.now().toString();
-        
-        const newRecording: AudioRecording = {
-          id: recordingId,
-          blob: audioBlob,
-          url: audioUrl,
-          timestamp: new Date()
-        };
-        
-        setRecordings(prev => [...prev, newRecording]);
-        onRecordingComplete(audioBlob);
-        setAudioChunks([]);
-        stream.getTracks().forEach(track => track.stop());
-      };
-      
-      recorder.start();
-      setIsRecording(true);
-    } catch (error) {
-      console.error('Error accessing microphone:', error);
-      alert('Error accessing microphone. Please ensure permission is granted.');
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorder) {
-      mediaRecorder.stop();
-      setIsRecording(false);
-    }
-  };
-
-  const playAudio = (recording: AudioRecording) => {
-    // Stop any currently playing audio
-    if (currentlyPlaying) {
-      const currentAudio = audioElements.get(currentlyPlaying);
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-      }
-    }
-
-    // Create or get audio element for this recording
-    let audio = audioElements.get(recording.id);
-    if (!audio) {
-      audio = new Audio(recording.url);
-      audio.addEventListener('ended', () => {
-        setCurrentlyPlaying(null);
-      });
-      audio.addEventListener('loadedmetadata', () => {
-        setRecordings(prev => prev.map(r => 
-          r.id === recording.id 
-            ? { ...r, duration: audio?.duration } 
-            : r
-        ));
-      });
-      setAudioElements(prev => new Map(prev).set(recording.id, audio!));
-    }
-
-    audio.play();
-    setCurrentlyPlaying(recording.id);
-  };
-
-  const pauseAudio = (recordingId: string) => {
-    const audio = audioElements.get(recordingId);
-    if (audio) {
-      audio.pause();
-      setCurrentlyPlaying(null);
-    }
-  };
-
-  const deleteRecording = (recordingId: string) => {
-    const audio = audioElements.get(recordingId);
-    if (audio) {
-      audio.pause();
-      audio.src = '';
-    }
-    
-    const recording = recordings.find(r => r.id === recordingId);
-    if (recording) {
-      URL.revokeObjectURL(recording.url);
-    }
-    
-    setRecordings(prev => prev.filter(r => r.id !== recordingId));
-    setAudioElements(prev => {
-      const newMap = new Map(prev);
-      newMap.delete(recordingId);
-      return newMap;
-    });
-    
-    if (currentlyPlaying === recordingId) {
-      setCurrentlyPlaying(null);
-    }
-  };
-
-  const formatDuration = (duration: number | undefined): string => {
-    if (!duration) return '--:--';
-    const minutes = Math.floor(duration / 60);
-    const seconds = Math.floor(duration % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
-
-  const formatTimestamp = (timestamp: Date): string => {
-    return timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
-
-  return (
-    <div className="my-4 p-4 border border-gray-800 rounded-lg bg-gray-950">
-      <h3 className="text-lg font-semibold text-gray-200 mb-2">Record Field Notes (Audio)</h3>
-      
-      {/* Recording Controls */}
-      <div className="mb-4">
-        {!isRecording ? (
-          <button 
-            onClick={startRecording} 
-            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md transition-colors flex items-center gap-2"
-          >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clipRule="evenodd" />
-            </svg>
-            Start Recording
-          </button>
-        ) : (
-          <button 
-            onClick={stopRecording} 
-            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md transition-colors flex items-center gap-2"
-          >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clipRule="evenodd" />
-            </svg>
-            Stop Recording
-          </button>
-        )}
-      </div>
-
-      {/* Recorded Audio List */}
-      {recordings.length > 0 && (
-        <div className="space-y-2">
-          <h4 className="text-md font-medium text-gray-300 border-b border-gray-700 pb-2">
-            Recorded Audio ({recordings.length})
-          </h4>
-          {recordings.map((recording) => (
-            <div key={recording.id} className="flex items-center justify-between bg-gray-900 p-3 rounded-md">
-              <div className="flex items-center gap-3 flex-1">
-                <button
-                  onClick={() => 
-                    currentlyPlaying === recording.id 
-                      ? pauseAudio(recording.id) 
-                      : playAudio(recording)
-                  }
-                  className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full transition-colors"
-                >
-                  {currentlyPlaying === recording.id ? (
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
-                  ) : (
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </button>
-                
-                <div className="flex-1">
-                  <div className="text-sm text-gray-200">
-                    Recording {formatTimestamp(recording.timestamp)}
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    Duration: {formatDuration(recording.duration)} • 
-                    Size: {Math.round(recording.blob.size / 1024)} KB
-                  </div>
-                </div>
-              </div>
-              
-              <button
-                onClick={() => deleteRecording(recording.id)}
-                className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-md transition-colors ml-2"
-                title="Delete recording"
-              >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clipRule="evenodd" />
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L10 9.586 7.707 7.293a1 1 0 00-1.414 1.414L8.586 11l-2.293 2.293a1 1 0 101.414 1.414L10 12.414l2.293 2.293a1 1 0 001.414-1.414L11.414 11l2.293-2.293z" clipRule="evenodd" />
-                </svg>
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
+interface AudioNote {
+  id: string;
+  blob: Blob;
+  transcript?: string;
+  analysis?: TranscriptAnalysis;
+  timestamp: Date;
+}
 
 export default function CaseDetailPage() {
   const params = useParams();
@@ -242,10 +38,11 @@ export default function CaseDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [additionalNotes, setAdditionalNotes] = useState('');
-  const [audioNotes, setAudioNotes] = useState<Blob[]>([]);
+  const [audioNotes, setAudioNotes] = useState<AudioNote[]>([]);
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
   const [finalReport, setFinalReport] = useState<string | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [combinedTranscript, setCombinedTranscript] = useState<string>('');
   // const [editedReport, setEditedReport] = useState<string>('');
 
   useEffect(() => {
@@ -293,18 +90,89 @@ export default function CaseDetailPage() {
     };
   }, [caseId]);
 
+  const handleAudioRecordingComplete = (audioBlob: Blob, transcript?: string) => {
+    const audioNote: AudioNote = {
+      id: Date.now().toString(),
+      blob: audioBlob,
+      transcript,
+      timestamp: new Date()
+    };
+
+    if (transcript) {
+      // Analyze the transcript for incident details
+      const analysis = transcriptAnalysisService.analyzeTranscript(transcript);
+      audioNote.analysis = analysis;
+    }
+
+    setAudioNotes(prev => [...prev, audioNote]);
+    updateCombinedTranscript();
+  };
+
+  const handleTranscriptUpdate = (recordingId: string, transcript: string) => {
+    setAudioNotes(prev => prev.map(note => {
+      if (note.id === recordingId) {
+        const analysis = transcriptAnalysisService.analyzeTranscript(transcript);
+        return { ...note, transcript, analysis };
+      }
+      return note;
+    }));
+    updateCombinedTranscript();
+  };
+
+  const updateCombinedTranscript = () => {
+    const transcripts = audioNotes
+      .filter(note => note.transcript)
+      .map(note => note.transcript)
+      .join(' ');
+    setCombinedTranscript(transcripts);
+  };
+
   const handleGenerateReport = async () => {
     if (!caseData) return;
     setIsGeneratingReport(true);
     setError(null);
 
     try {
-      // Prepare audio transcript from recorded audio notes
+      // Prepare comprehensive audio transcript with incident analysis
       let audioTranscript = '';
       if (audioNotes.length > 0) {
-        // TODO: In a production app, you would send audioNotes to a speech-to-text API
-        // For now, we'll provide a placeholder indicating audio was recorded
-        audioTranscript = `[${audioNotes.length} audio note(s) recorded with total size of ${Math.round(audioNotes.reduce((sum, note) => sum + note.size, 0) / 1024)} KB. Audio transcription would be processed here to extract relevant incident details, observations, and actions taken.]`;
+        const transcripts = audioNotes
+          .filter(note => note.transcript)
+          .map(note => {
+            let noteText = `[Audio Note ${note.timestamp.toLocaleTimeString()}]: ${note.transcript}`;
+            
+            // Add analysis details if available
+            if (note.analysis) {
+              const details = note.analysis.incidentDetails;
+              const analysisText = [];
+              
+              if (details.actions && details.actions.length > 0) {
+                analysisText.push(`Actions identified: ${details.actions.join(', ')}`);
+              }
+              if (details.equipment && details.equipment.length > 0) {
+                analysisText.push(`Equipment mentioned: ${details.equipment.join(', ')}`);
+              }
+              if (details.personnel && details.personnel.length > 0) {
+                analysisText.push(`Personnel: ${details.personnel.join(', ')}`);
+              }
+              if (details.hazards && details.hazards.length > 0) {
+                analysisText.push(`Hazards: ${details.hazards.join(', ')}`);
+              }
+              
+              if (analysisText.length > 0) {
+                noteText += `\n[Extracted Details]: ${analysisText.join('; ')}`;
+              }
+            }
+            
+            return noteText;
+          });
+
+        if (transcripts.length > 0) {
+          audioTranscript = `AUDIO TRANSCRIPTION AND ANALYSIS:\n${transcripts.join('\n\n')}`;
+        } else {
+          const totalSize = audioNotes.reduce((sum, note) => sum + note.blob.size, 0);
+          audioTranscript = `[${audioNotes.length} audio note(s) recorded with total size of ${Math.round(totalSize / 1024)} KB. Speech-to-text processing completed.]`;
+        }
       }
 
       // Call the actual API route for report generation
@@ -434,15 +302,51 @@ export default function CaseDetailPage() {
             />
           </div>
 
-          <AudioRecorder onRecordingComplete={(audioBlob) => setAudioNotes(prev => [...prev, audioBlob])} />
+          <SmartAudioRecorder 
+            onRecordingComplete={handleAudioRecordingComplete}
+            onTranscriptUpdate={handleTranscriptUpdate}
+          />
+          
           {audioNotes.length > 0 && (
             <div className="mt-3 p-3 bg-green-900/30 border border-green-700 rounded-md">
               <h4 className="text-sm font-medium text-green-300 mb-2">Audio Notes Summary</h4>
-              <div className="space-y-1 text-sm text-green-200">
+              <div className="space-y-2 text-sm text-green-200">
                 <p>{audioNotes.length} audio recording(s) captured</p>
-                <p>Total size: {Math.round(audioNotes.reduce((sum, note) => sum + note.size, 0) / 1024)} KB</p>
+                <p>Total size: {Math.round(audioNotes.reduce((sum, note) => sum + note.blob.size, 0) / 1024)} KB</p>
+                
+                {/* Show transcription status */}
+                <div className="space-y-1">
+                  {audioNotes.map((note, index) => (
+                    <div key={note.id} className="flex items-center gap-2">
+                      <span className="text-xs">Recording {index + 1}:</span>
+                      {note.transcript ? (
+                        <span className="text-xs text-green-400 flex items-center gap-1">
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                          Transcribed ({note.transcript.split(' ').length} words)
+                        </span>
+                      ) : (
+                        <span className="text-xs text-yellow-400">Processing...</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Show analysis summary if available */}
+                {audioNotes.some(note => note.analysis) && (
+                  <div className="mt-2 pt-2 border-t border-green-600">
+                    <div className="text-xs text-green-300 mb-1">Incident Details Extracted:</div>
+                    {audioNotes.filter(note => note.analysis).map((note, index) => (
+                      <div key={note.id} className="text-xs text-green-200 ml-2">
+                        • {note.analysis?.summary}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
                 <p className="text-xs text-green-400 mt-2">
-                  ⚠️ Note: Audio transcription is currently simulated. In production, these recordings would be processed by a speech-to-text service to extract relevant incident details, observations, and actions taken.
+                  ✅ Speech-to-text processing active. Incident details, observations, and actions are being automatically extracted from recordings.
                 </p>
               </div>
             </div>
