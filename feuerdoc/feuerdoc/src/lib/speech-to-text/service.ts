@@ -25,7 +25,12 @@ export class SpeechToTextService {
   }
 
   private checkSupport(): void {
-    // Check for Web Speech API support
+    // Check for Web Speech API support (only in browser)
+    if (typeof window === 'undefined') {
+      this.isSupported = false;
+      return;
+    }
+    
     const SpeechRecognition = 
       (window as any).SpeechRecognition || 
       (window as any).webkitSpeechRecognition ||
@@ -234,6 +239,10 @@ export class SpeechToTextService {
   }
 
   private createNewRecognition(): any {
+    if (typeof window === 'undefined') {
+      throw new Error('Speech recognition not available on server');
+    }
+    
     const SpeechRecognition = 
       (window as any).SpeechRecognition || 
       (window as any).webkitSpeechRecognition ||
