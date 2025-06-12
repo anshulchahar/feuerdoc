@@ -567,58 +567,70 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </div>
           )}
 
-          {/* Input Bar */}
-          <div className="flex items-end space-x-3">
-            <div className="flex-1 relative">
-              <textarea
-                ref={inputRef}
-                value={inputText}
-                onChange={handleInputChange}
-                onKeyPress={handleKeyPress}
-                placeholder="Add field notes, observations, actions taken, equipment used..."
-                className={`w-full p-3 pr-20 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-gray-900 dark:focus:border-white resize-none overflow-hidden ${
-                  theme === 'light' 
-                    ? 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-500' 
-                    : 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-400'
-                }`}
-                rows={1}
-                style={{ minHeight: '44px', maxHeight: '120px' }}
-              />
-              
-              {/* Audio Button */}
-              <button
-                onClick={() => setShowAudioRecorder(!showAudioRecorder)}
-                className={`absolute right-2 bottom-2 p-2 rounded-md transition-colors ${
-                  showAudioRecorder || isRecording
-                    ? 'bg-red-500 hover:bg-red-600 text-white'
-                    : theme === 'light'
-                    ? 'bg-gray-200 hover:bg-gray-300 text-gray-600'
-                    : 'bg-gray-600 hover:bg-gray-500 text-gray-400'
-                }`}
-                title="Record Audio"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clipRule="evenodd" />
-                </svg>
-              </button>
+          {/* Input Bar - Capsule Design */}
+          <div className="flex items-center space-x-3">
+            <div className="flex-1 relative flex items-center">
+              <div className={`flex-1 flex items-center rounded-full border shadow-sm overflow-hidden min-h-[50px] ${
+                theme === 'light' 
+                  ? 'border-gray-300 bg-gray-50' 
+                  : 'border-gray-600 bg-gray-700'
+              }`}>
+                <textarea
+                  ref={inputRef}
+                  value={inputText}
+                  onChange={handleInputChange}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Add field notes, observations, actions taken, equipment used..."
+                  className={`flex-1 py-3 px-4 pr-24 focus:outline-none resize-none overflow-hidden ${
+                    theme === 'light' 
+                      ? 'bg-gray-50 text-gray-900 placeholder-gray-500' 
+                      : 'bg-gray-700 text-gray-100 placeholder-gray-400'
+                  }`}
+                  rows={1}
+                  style={{ minHeight: '44px', maxHeight: '120px' }}
+                />
+                
+                <div className="flex items-center pr-2">
+                  {/* Audio Button */}
+                  <button
+                    onClick={() => setShowAudioRecorder(!showAudioRecorder)}
+                    className={`p-2 rounded-full transition-colors mr-1 ${
+                      showAudioRecorder || isRecording
+                        ? 'bg-red-500 hover:bg-red-600 text-white'
+                        : theme === 'light'
+                        ? 'bg-gray-200 hover:bg-gray-300 text-gray-600'
+                        : 'bg-gray-600 hover:bg-gray-500 text-gray-400'
+                    }`}
+                    title="Record Audio"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                
+                  {/* Send Button - Integrated in capsule */}
+                  <button
+                    onClick={handleSendMessage}
+                    disabled={!inputText.trim() && audioNotes.length === 0}
+                    className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors disabled:cursor-not-allowed ${
+                      theme === 'light'
+                        ? 'bg-gray-900 hover:bg-gray-700 disabled:bg-gray-300 text-white disabled:text-gray-500'
+                        : 'bg-white hover:bg-gray-200 disabled:bg-gray-600 text-black disabled:text-gray-500'
+                    }`}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
             </div>
-
-            {/* Send Button */}
-            <button
-              onClick={handleSendMessage}
-              disabled={!inputText.trim() && audioNotes.length === 0}
-              className="flex items-center justify-center w-10 h-10 bg-gray-900 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-200 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white dark:text-black disabled:text-gray-500 rounded-lg transition-colors disabled:cursor-not-allowed"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
-            </button>
 
             {/* Generate Report Button */}
             <button
               onClick={handleGenerateReport}
               disabled={isGeneratingReport || messages.filter(m => m.type === 'user').length === 0}
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white disabled:text-gray-500 rounded-lg transition-colors disabled:cursor-not-allowed text-sm font-medium"
+              className="px-4 py-2.5 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white disabled:text-gray-500 rounded-full transition-colors disabled:cursor-not-allowed text-sm font-medium shadow-sm"
             >
               {isGeneratingReport ? 'Generating...' : caseData.final_report_content ? 'Regenerate Report' : 'Generate Report'}
             </button>
