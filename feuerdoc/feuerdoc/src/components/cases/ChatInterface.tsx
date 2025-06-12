@@ -55,13 +55,8 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   }, [theme]);
 
   useEffect(() => {
-    // Add welcome message
-    setMessages([{
-      id: '1',
-      type: 'system',
-      content: `Case: ${caseData.title}\nLocation: ${caseData.location}\n\nAdd your field notes, observations, and audio recordings. When ready, I'll generate a comprehensive fire incident report.`,
-      timestamp: new Date()
-    }]);
+    // Initialize empty messages array (removed welcome message)
+    setMessages([]);
   }, [caseData]);
 
   const scrollToBottom = () => {
