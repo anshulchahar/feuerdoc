@@ -12,15 +12,15 @@ interface ViewToggleProps {
 const ViewToggle: React.FC<ViewToggleProps> = ({ viewMode, onViewModeChange }) => {
   return (
     <div 
-      className="flex items-center force-light-mode light-mode-container !bg-white dark:!bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-1 shadow-sm"
-      style={{ backgroundColor: 'white', borderColor: '#e5e7eb' }}
+      className="flex items-center force-light-mode light-mode-container !bg-white dark:!bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-1.5 shadow-sm backdrop-blur-sm"
+      style={{ backgroundColor: 'white', borderColor: '#f3f4f6' }}
     >
       <button
         onClick={() => onViewModeChange('grid')}
-        className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+        className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
           viewMode === 'grid'
-            ? 'bg-fire-primary text-white shadow-sm'
-            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700'
+            ? 'bg-fire-primary text-white shadow-md transform scale-105'
+            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 hover:scale-105'
         }`}
         title="Grid view"
       >
@@ -32,10 +32,10 @@ const ViewToggle: React.FC<ViewToggleProps> = ({ viewMode, onViewModeChange }) =
       
       <button
         onClick={() => onViewModeChange('list')}
-        className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+        className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
           viewMode === 'list'
-            ? 'bg-fire-primary text-white shadow-sm'
-            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700'
+            ? 'bg-fire-primary text-white shadow-md transform scale-105'
+            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 hover:scale-105'
         }`}
         title="List view"
       >

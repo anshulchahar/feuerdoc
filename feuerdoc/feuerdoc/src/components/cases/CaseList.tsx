@@ -195,8 +195,8 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
     <>
       {/* Quick Actions Bar with enhanced functionality */}
       <div 
-        className="search-container light-mode-container force-light-mode !bg-white dark:!bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-lg mb-6 shadow-sm"
-        style={{ backgroundColor: 'white', borderColor: '#e5e7eb' }}
+        className="search-container light-mode-container force-light-mode !bg-white dark:!bg-gray-800 border border-gray-100 dark:border-gray-700 p-6 rounded-2xl mb-6 shadow-sm backdrop-blur-sm"
+        style={{ backgroundColor: 'white', borderColor: '#f3f4f6' }}
       >
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
           {/* Search Section */}
@@ -212,8 +212,8 @@ const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], on
                 placeholder="Search cases by title, location, or status..."
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-fire-primary focus:border-fire-primary"
-                style={{ backgroundColor: 'white', borderColor: '#d1d5db', color: '#111827' }}
+                className="block w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-fire-primary focus:border-fire-primary transition-all duration-200 shadow-sm focus:shadow-md"
+                style={{ backgroundColor: 'white', borderColor: '#e5e7eb', color: '#111827' }}
               />
             </div>
           </div>

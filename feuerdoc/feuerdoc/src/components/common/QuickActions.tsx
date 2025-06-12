@@ -31,21 +31,21 @@ const QuickActions: React.FC<QuickActionsProps> = ({
   ];
 
   return (
-    <div className="glass-card p-4 rounded-lg mb-4">
+    <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-6 rounded-2xl mb-6 shadow-sm backdrop-blur-sm force-light-mode light-mode-container !bg-white" style={{ backgroundColor: 'white', borderColor: '#f3f4f6' }}>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         {/* Quick Status Filters */}
-        <div className="flex flex-wrap gap-2">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 self-center mr-2">
+        <div className="flex flex-wrap gap-3">
+          <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 self-center mr-3">
             Quick filters:
           </span>
           {statusButtons.map((button) => (
             <button
               key={button.value}
               onClick={() => onStatusFilter(button.value)}
-              className={`px-3 py-1 text-xs font-medium text-white rounded-full transition-colors ${
+              className={`px-4 py-2 text-sm font-medium text-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105 ${
                 currentFilters.status === button.value
-                  ? button.color.replace('hover:', '')
-                  : button.color
+                  ? button.color.replace('hover:', '') + ' shadow-md scale-105'
+                  : button.color + ' hover:shadow-lg'
               }`}
             >
               {button.label}
@@ -54,11 +54,11 @@ const QuickActions: React.FC<QuickActionsProps> = ({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {hasActiveFilters && (
             <button
               onClick={onClearFilters}
-              className="text-sm text-fire-primary hover:text-fire-secondary transition-colors flex items-center gap-1"
+              className="text-sm text-fire-primary hover:text-fire-secondary transition-all duration-200 flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-fire-primary/10 font-medium"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -67,7 +67,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
             </button>
           )}
           
-          <div className="text-sm text-gray-600 dark:text-gray-400">
+          <div className="text-sm font-medium text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-700/50 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-600">
             {filteredCases} / {totalCases} cases
           </div>
         </div>
