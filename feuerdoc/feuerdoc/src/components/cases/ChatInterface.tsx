@@ -7,6 +7,7 @@ import DocumentPreview from '@/components/common/DocumentPreview';
 import { supabase } from '@/lib/supabase/client';
 import { transcriptAnalysisService, TranscriptAnalysis } from '@/lib/speech-to-text/analysis';
 import { useTheme } from '@/contexts/ThemeContext';
+import FormattedReport from '@/components/reports/FormattedReport';
 
 interface AudioNote {
   id: string;
@@ -41,9 +42,13 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [showAudioRecorder, setShowAudioRecorder] = useState(false);
+  const [isEditingReport, setIsEditingReport] = useState(false);
+  const [editedReportContent, setEditedReportContent] = useState('');
+  const [showSavedConfirmation, setShowSavedConfirmation] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const reportTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     scrollToBottom();
@@ -57,7 +62,20 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   useEffect(() => {
     // Initialize empty messages array (removed welcome message)
     setMessages([]);
+    
+    // Initialize the edited report content when available
+    if (caseData?.final_report_content) {
+      setEditedReportContent(caseData.final_report_content);
+    }
   }, [caseData]);
+  
+  // Auto-resize effect for report textarea when editing
+  useEffect(() => {
+    if (isEditingReport && reportTextareaRef.current) {
+      reportTextareaRef.current.style.height = 'auto';
+      reportTextareaRef.current.style.height = `${reportTextareaRef.current.scrollHeight}px`;
+    }
+  }, [isEditingReport, editedReportContent]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -227,6 +245,66 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       handleSendMessage();
     }
   };
+  
+  const handleEditReport = () => {
+    setIsEditingReport(true);
+  };
+  
+  const handleSaveReport = async () => {
+    try {
+      const { error: updateError } = await supabase
+        .from('cases')
+        .update({ final_report_content: editedReportContent })
+        .eq('id', caseData.id);
+        
+      if (updateError) {
+        console.error('Error saving edited report:', updateError);
+        
+        // Show error message
+        const errorMessage: Message = {
+          id: Date.now().toString(),
+          type: 'system',
+          content: `Error saving report: ${updateError.message}`,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      } else {
+        setIsEditingReport(false);
+        
+        // Show success message
+        const successMessage: Message = {
+          id: Date.now().toString(),
+          type: 'system',
+          content: 'Report saved successfully!',
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, successMessage]);
+        
+        // Show saved confirmation animation
+        setShowSavedConfirmation(true);
+        setTimeout(() => {
+          setShowSavedConfirmation(false);
+        }, 3000);
+      }
+    } catch (err: any) {
+      console.error('Error saving edited report:', err);
+      
+      // Show error message
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        type: 'system',
+        content: `Error saving report: ${err.message || 'Unknown error'}`,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    }
+  };
+  
+  const handleCancelEdit = () => {
+    // Reset to original report content
+    setEditedReportContent(caseData.final_report_content || '');
+    setIsEditingReport(false);
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputText(e.target.value);
@@ -259,6 +337,94 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </p>
         </div>
       </div>
+      
+      {/* Final Report Section - Show when report exists */}
+      {caseData.final_report_content && (
+        <div className={`border-b ${theme === 'light' ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-700'}`}>
+          <div className="max-w-4xl mx-auto p-6">
+            <div className="mb-4 flex justify-between items-center">
+              <div className="flex items-center">
+                <h2 className={`text-lg font-semibold ${theme === 'light' ? 'text-gray-900' : 'text-gray-100'}`}>
+                  Final Report
+                </h2>
+                {showSavedConfirmation && (
+                  <span className="ml-3 text-sm px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-md animate-pulse">
+                    Saved!
+                  </span>
+                )}
+              </div>
+              {!isEditingReport ? (
+                <button
+                  onClick={handleEditReport}
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    theme === 'light'
+                      ? 'bg-gray-900 hover:bg-gray-700 text-white'
+                      : 'bg-white hover:bg-gray-200 text-black'
+                  }`}
+                >
+                  Edit Report
+                </button>
+              ) : (
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleSaveReport}
+                    className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                      theme === 'light'
+                        ? 'bg-green-600 hover:bg-green-700 text-white'
+                        : 'bg-green-600 hover:bg-green-700 text-white'
+                    }`}
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={handleCancelEdit}
+                    className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                      theme === 'light'
+                        ? 'bg-gray-300 hover:bg-gray-400 text-gray-800'
+                        : 'bg-gray-600 hover:bg-gray-700 text-gray-100'
+                    }`}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+            </div>
+            
+            <div 
+              className={`border rounded-lg shadow-sm overflow-hidden ${
+                theme === 'light' ? 'border-gray-200' : 'border-gray-700'
+              }`}
+            >
+              {!isEditingReport ? (
+                <div className="p-4 overflow-auto max-h-[500px]">
+                  <FormattedReport content={caseData.final_report_content} />
+                </div>
+              ) : (
+                <div>
+                  <textarea
+                    ref={reportTextareaRef}
+                    value={editedReportContent}
+                    onChange={(e) => setEditedReportContent(e.target.value)}
+                    className={`w-full p-4 min-h-[400px] resize-none focus:outline-none focus:ring-2 font-mono text-sm leading-relaxed ${
+                      theme === 'light' 
+                        ? 'bg-white text-gray-900 focus:ring-gray-300' 
+                        : 'bg-gray-800 text-gray-100 focus:ring-gray-600'
+                    }`}
+                    placeholder="## Final Report Title&#10;&#10;### Section Header&#10;- List item&#10;- Another item&#10;&#10;Regular paragraph text."
+                  />
+                  <div className={`p-2 border-t text-xs ${
+                    theme === 'light' 
+                      ? 'bg-gray-50 text-gray-600 border-gray-200' 
+                      : 'bg-gray-700 text-gray-300 border-gray-600'
+                  }`}>
+                    <p>Markdown supported: ## Heading, ### Subheading, - List item, **Bold**, *Italic*</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto">
@@ -277,9 +443,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                     : 'bg-gray-800 text-gray-100 border border-gray-700'
               }`}>
                 {message.type === 'report' ? (
-                  <div className={`prose max-w-none ${theme === 'dark' ? 'prose-invert' : ''}`}>
-                    <div className="whitespace-pre-wrap">{message.content}</div>
-                  </div>
+                  <FormattedReport content={message.content} />
                 ) : (
                   <div className="whitespace-pre-wrap">{message.content}</div>
                 )}
@@ -330,28 +494,35 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
         </div>
       </div>
 
-      {/* Initial Report Preview Button (above input) */}
-      {caseData.initial_report_path && (
-        <div className={`flex-shrink-0 border-t px-4 py-2 ${
-          theme === 'light' ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-700'
-        }`}>
-          <div className="max-w-4xl mx-auto flex justify-center">
-            <button
-              onClick={() => setIsPreviewOpen(true)}
-              className={`inline-flex items-center px-3 py-1.5 text-sm rounded-md transition-colors ${
-                theme === 'light'
-                  ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                  : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-              }`}
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              View Initial Report
-            </button>
+      {/* Chat Section Header */}
+      <div className={`flex-shrink-0 border-t px-4 py-3 ${
+        theme === 'light' ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-700'
+      }`}>
+        <div className="max-w-4xl mx-auto">
+          <div className="flex justify-between items-center">
+            <h3 className={`text-md font-medium ${theme === 'light' ? 'text-gray-900' : 'text-gray-100'}`}>
+              {caseData.final_report_content ? 'Additional Notes & Messages' : 'Case Notes & Messages'}
+            </h3>
+            
+            {/* Initial Report Button */}
+            {caseData.initial_report_path && (
+              <button
+                onClick={() => setIsPreviewOpen(true)}
+                className={`inline-flex items-center px-3 py-1.5 text-sm rounded-md transition-colors ${
+                  theme === 'light'
+                    ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                    : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                }`}
+              >
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                View Initial Report
+              </button>
+            )}
           </div>
         </div>
-      )}
+      </div>
 
       {/* Input Area */}
       <div className={`flex-shrink-0 border-t p-4 ${theme === 'light' ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-700'}`}>
@@ -449,7 +620,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
               disabled={isGeneratingReport || messages.filter(m => m.type === 'user').length === 0}
               className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white disabled:text-gray-500 rounded-lg transition-colors disabled:cursor-not-allowed text-sm font-medium"
             >
-              {isGeneratingReport ? 'Generating...' : 'Generate Report'}
+              {isGeneratingReport ? 'Generating...' : caseData.final_report_content ? 'Regenerate Report' : 'Generate Report'}
             </button>
           </div>
         </div>
