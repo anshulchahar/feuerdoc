@@ -23,7 +23,7 @@ export default function HomePage() {
       {/* Modern Circular Create Button - Fixed Position */}
       <button
         onClick={() => setIsCreateCaseModalOpen(true)}
-        className="fixed bottom-8 right-8 bg-gray-900 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-200 text-white dark:text-black w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-50 group"
+        className="fixed bottom-8 right-8 bg-black hover:bg-gray-800 text-white w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-50 group"
         title="Create New Case"
       >
         <svg 
