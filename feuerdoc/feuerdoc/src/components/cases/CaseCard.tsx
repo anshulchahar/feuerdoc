@@ -28,7 +28,7 @@ const CaseCard: React.FC<CaseCardProps> = ({ caseData, onInfoClick, onEditClick 
               e.stopPropagation();
               onInfoClick();
             }}
-            className="p-1.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors duration-200"
+            className="p-1.5 rounded-full bg-gray-900 hover:bg-gray-700 text-white transition-colors duration-200"
             title="View Details"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
