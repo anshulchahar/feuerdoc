@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { Case } from '@/types';
 import CaseCard from './CaseCard';
@@ -12,7 +12,11 @@ interface CaseListProps {
   onCaseSelected?: (caseData: Case) => void; // Callback when a case is selected from the list
 }
 
-const CaseList: React.FC<CaseListProps> = ({ initialCases = [], onCaseSelected }) => {
+export interface CaseListRef {
+  refreshCases: () => void;
+}
+
+const CaseList = forwardRef<CaseListRef, CaseListProps>(({ initialCases = [], onCaseSelected }, ref) => {
   const [cases, setCases] = useState<Case[]>(initialCases);
   const [loading, setLoading] = useState(!initialCases.length);
   const [error, setError] = useState<string | null>(null);
@@ -20,37 +24,43 @@ const CaseList: React.FC<CaseListProps> = ({ initialCases = [], onCaseSelected }
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
+  const fetchCases = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data: dbData, error: dbError } = await supabase
+        .from('cases')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (dbError) {
+        console.error('Error fetching cases:', dbError);
+        setError(dbError.message);
+        setCases([]); // Clear cases on error
+      } else if (dbData) {
+        setCases(dbData as Case[]);
+      }
+    } catch (e: any) {
+      console.error('Exception fetching cases:', e);
+      setError(e.message || 'Failed to load cases');
+      setCases([]); // Clear cases on error
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Expose the refreshCases method to parent components
+  useImperativeHandle(ref, () => ({
+    refreshCases: fetchCases,
+  }));
+
   useEffect(() => {
     let isMounted = true;
     const channelName = 'public:cases';
 
-    const fetchCases = async () => {
+    const fetchCasesWithMountCheck = async () => {
       if (!isMounted) return;
-      setLoading(true);
-      try {
-        const { data: dbData, error: dbError } = await supabase
-          .from('cases')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (!isMounted) return;
-        if (dbError) {
-          console.error('Error fetching cases:', dbError);
-          setError(dbError.message);
-          setCases([]); // Clear cases on error
-        } else if (dbData) {
-          setCases(dbData as Case[]);
-        }
-      } catch (e: any) {
-        if (!isMounted) return;
-        console.error('Exception fetching cases:', e);
-        setError(e.message || 'Failed to load cases');
-        setCases([]); // Clear cases on error
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
+      await fetchCases();
     };
 
     if (initialCases.length > 0) {
@@ -60,7 +70,7 @@ const CaseList: React.FC<CaseListProps> = ({ initialCases = [], onCaseSelected }
       setLoading(false);
     } else {
       // No initial cases, so fetch them.
-      fetchCases();
+      fetchCasesWithMountCheck();
     }
 
     const caseSubscription = supabase
@@ -210,6 +220,8 @@ const CaseList: React.FC<CaseListProps> = ({ initialCases = [], onCaseSelected }
       )}
     </>
   );
-};
+});
+
+CaseList.displayName = 'CaseList';
 
 export default CaseList;

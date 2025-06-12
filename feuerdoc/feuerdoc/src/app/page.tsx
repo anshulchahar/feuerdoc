@@ -1,16 +1,21 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Modal from "@/components/common/Modal";
 import CreateCaseForm from "@/components/cases/CreateCaseForm";
 import { Case } from "@/types";
-import CaseList from "@/components/cases/CaseList"; // Import CaseList
+import CaseList, { CaseListRef } from "@/components/cases/CaseList"; // Import CaseList and ref type
 
 export default function HomePage() {
   const [isCreateCaseModalOpen, setIsCreateCaseModalOpen] = useState(false);
+  const caseListRef = useRef<CaseListRef>(null);
 
   const handleCaseCreated = (newCase: Case) => {
     console.log("New case created on HomePage:", newCase);
+    // Immediately refresh the case list to show the new case
+    if (caseListRef.current) {
+      caseListRef.current.refreshCases();
+    }
   };
 
   return (
@@ -51,7 +56,7 @@ export default function HomePage() {
         <h2 className="text-3xl font-semibold mb-6 text-gray-900 dark:text-gray-100 text-center">
           Cases
         </h2>
-        <CaseList />
+        <CaseList ref={caseListRef} />
       </div>
     </div>
   );
