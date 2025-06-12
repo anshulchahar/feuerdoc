@@ -44,7 +44,7 @@ export const LayoutWrapper: React.FC<LayoutWrapperProps> = ({ children }) => {
         <button
           data-hamburger
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="fixed top-4 left-4 z-50 p-2 bg-gray-800 hover:bg-gray-700 text-white rounded-md shadow-lg transition-colors"
+          className="fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-white border border-gray-200 dark:border-gray-700 rounded-md shadow-lg transition-colors"
           title="Toggle Sidebar"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

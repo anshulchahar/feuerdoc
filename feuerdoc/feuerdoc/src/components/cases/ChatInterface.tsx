@@ -6,6 +6,7 @@ import { SmartAudioRecorder } from '@/components/audio/SmartAudioRecorder';
 import DocumentPreview from '@/components/common/DocumentPreview';
 import { supabase } from '@/lib/supabase/client';
 import { transcriptAnalysisService, TranscriptAnalysis } from '@/lib/speech-to-text/analysis';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface AudioNote {
   id: string;
@@ -32,6 +33,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   caseData, 
   onReportGenerated 
 }) => {
+  const { theme } = useTheme();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isRecording, setIsRecording] = useState(false);
@@ -46,6 +48,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    // Force re-render when theme changes
+    // This ensures all theme-dependent styling is updated
+  }, [theme]);
 
   useEffect(() => {
     // Add welcome message
@@ -238,14 +245,21 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const initialReportUrl = supabase.storage.from('case-files').getPublicUrl(caseData.initial_report_path).data.publicUrl;
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900">
+    <div 
+      className={`flex flex-col h-screen ${theme === 'light' ? 'bg-gray-50' : 'bg-gray-900'}`}
+      data-theme={theme}
+      style={{
+        backgroundColor: theme === 'light' ? '#f9fafb' : '#111827',
+        color: theme === 'light' ? '#111827' : '#f9fafb'
+      }}
+    >
       {/* Header */}
-      <div className="flex-shrink-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
+      <div className={`flex-shrink-0 border-b p-4 ${theme === 'light' ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-700'}`}>
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+          <h1 className={`text-xl font-semibold ${theme === 'light' ? 'text-gray-900' : 'text-gray-100'}`}>
             {caseData.title}
           </h1>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-gray-400'}`}>
             {caseData.location} • Status: {caseData.status}
           </p>
         </div>
@@ -260,11 +274,15 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 message.type === 'user' 
                   ? 'bg-fire-primary text-white' 
                   : message.type === 'report'
-                  ? 'bg-green-100 dark:bg-green-900 text-green-900 dark:text-green-100 border border-green-200 dark:border-green-700'
-                  : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700'
+                  ? theme === 'light'
+                    ? 'bg-green-100 text-green-900 border border-green-200'
+                    : 'bg-green-900 text-green-100 border border-green-700'
+                  : theme === 'light'
+                    ? 'bg-white text-gray-900 border border-gray-200'
+                    : 'bg-gray-800 text-gray-100 border border-gray-700'
               }`}>
                 {message.type === 'report' ? (
-                  <div className="prose dark:prose-invert max-w-none">
+                  <div className={`prose max-w-none ${theme === 'dark' ? 'prose-invert' : ''}`}>
                     <div className="whitespace-pre-wrap">{message.content}</div>
                   </div>
                 ) : (
@@ -297,7 +315,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           
           {isGeneratingReport && (
             <div className="flex justify-start">
-              <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 rounded-lg p-4 max-w-[80%]">
+              <div className={`rounded-lg p-4 max-w-[80%] border ${
+                theme === 'light' 
+                  ? 'bg-white text-gray-900 border-gray-200' 
+                  : 'bg-gray-800 text-gray-100 border-gray-700'
+              }`}>
                 <div className="flex items-center space-x-2">
                   <svg className="animate-spin h-4 w-4 text-fire-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -315,11 +337,17 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
       {/* Initial Report Preview Button (above input) */}
       {caseData.initial_report_path && (
-        <div className="flex-shrink-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-2">
+        <div className={`flex-shrink-0 border-t px-4 py-2 ${
+          theme === 'light' ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-700'
+        }`}>
           <div className="max-w-4xl mx-auto flex justify-center">
             <button
               onClick={() => setIsPreviewOpen(true)}
-              className="inline-flex items-center px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-md transition-colors"
+              className={`inline-flex items-center px-3 py-1.5 text-sm rounded-md transition-colors ${
+                theme === 'light'
+                  ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                  : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+              }`}
             >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -331,11 +359,15 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       )}
 
       {/* Input Area */}
-      <div className="flex-shrink-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
+      <div className={`flex-shrink-0 border-t p-4 ${theme === 'light' ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-700'}`}>
         <div className="max-w-4xl mx-auto">
           {/* Audio Recorder (when active) */}
           {showAudioRecorder && (
-            <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <div className={`mb-4 p-4 border rounded-lg ${
+              theme === 'light'
+                ? 'bg-red-50 border-red-200'
+                : 'bg-red-900/20 border-red-800'
+            }`}>
               <SmartAudioRecorder 
                 onRecordingComplete={handleAudioRecordingComplete}
                 onTranscriptUpdate={handleTranscriptUpdate}
@@ -345,12 +377,20 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
           {/* Audio Notes Preview */}
           {audioNotes.length > 0 && (
-            <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-              <div className="text-sm text-blue-800 dark:text-blue-200 mb-2">
+            <div className={`mb-4 p-3 border rounded-lg ${
+              theme === 'light'
+                ? 'bg-blue-50 border-blue-200'
+                : 'bg-blue-900/20 border-blue-800'
+            }`}>
+              <div className={`text-sm mb-2 ${
+                theme === 'light' ? 'text-blue-800' : 'text-blue-200'
+              }`}>
                 🎤 {audioNotes.length} audio recording(s) ready to send
               </div>
               {audioNotes.map((note, index) => (
-                <div key={note.id} className="text-xs text-blue-600 dark:text-blue-300">
+                <div key={note.id} className={`text-xs ${
+                  theme === 'light' ? 'text-blue-600' : 'text-blue-300'
+                }`}>
                   {note.transcript ? (
                     <span>Recording {index + 1}: "{note.transcript.substring(0, 100)}..."</span>
                   ) : (
@@ -370,7 +410,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 onChange={handleInputChange}
                 onKeyPress={handleKeyPress}
                 placeholder="Add field notes, observations, actions taken, equipment used..."
-                className="w-full p-3 pr-20 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-fire-primary focus:border-fire-primary resize-none overflow-hidden"
+                className={`w-full p-3 pr-20 border rounded-lg focus:outline-none focus:ring-2 focus:ring-fire-primary focus:border-fire-primary resize-none overflow-hidden ${
+                  theme === 'light' 
+                    ? 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-500' 
+                    : 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-400'
+                }`}
                 rows={1}
                 style={{ minHeight: '44px', maxHeight: '120px' }}
               />
@@ -381,7 +425,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 className={`absolute right-2 bottom-2 p-2 rounded-md transition-colors ${
                   showAudioRecorder || isRecording
                     ? 'bg-red-500 hover:bg-red-600 text-white'
-                    : 'bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-600 dark:text-gray-400'
+                    : theme === 'light'
+                    ? 'bg-gray-200 hover:bg-gray-300 text-gray-600'
+                    : 'bg-gray-600 hover:bg-gray-500 text-gray-400'
                 }`}
                 title="Record Audio"
               >
