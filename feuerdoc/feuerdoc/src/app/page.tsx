@@ -1,16 +1,21 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Modal from "@/components/common/Modal";
 import CreateCaseForm from "@/components/cases/CreateCaseForm";
 import { Case } from "@/types";
-import CaseList from "@/components/cases/CaseList"; // Import CaseList
+import CaseList, { CaseListRef } from "@/components/cases/CaseList"; // Import CaseList and ref type
 
 export default function HomePage() {
   const [isCreateCaseModalOpen, setIsCreateCaseModalOpen] = useState(false);
+  const caseListRef = useRef<CaseListRef>(null);
 
   const handleCaseCreated = (newCase: Case) => {
     console.log("New case created on HomePage:", newCase);
+    // Immediately refresh the case list to show the new case
+    if (caseListRef.current) {
+      caseListRef.current.refreshCases();
+    }
   };
 
   return (
@@ -18,7 +23,7 @@ export default function HomePage() {
       {/* Modern Circular Create Button - Fixed Position */}
       <button
         onClick={() => setIsCreateCaseModalOpen(true)}
-        className="fixed bottom-8 right-8 bg-fire-primary hover:bg-fire-secondary text-white w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-50 group"
+        className="fixed bottom-8 right-8 bg-black hover:bg-gray-800 text-white w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-50 group"
         title="Create New Case"
       >
         <svg 
@@ -48,10 +53,7 @@ export default function HomePage() {
       </Modal>
 
       <div className="w-full max-w-5xl px-4">
-        <h2 className="text-3xl font-semibold mb-6 text-gray-900 dark:text-gray-100 text-center">
-          Cases
-        </h2>
-        <CaseList />
+        <CaseList ref={caseListRef} />
       </div>
     </div>
   );

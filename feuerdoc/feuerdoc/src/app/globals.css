@@ -5,9 +5,9 @@
 @tailwind utilities;
 
 :root {
-  --fire-red-primary: #FF4500;
-  --fire-red-secondary: #FF0000;
-  --fire-red-tertiary: #B22222;
+  --fire-red-primary: #000000;
+  --fire-red-secondary: #333333;
+  --fire-red-tertiary: #666666;
 }
 
 /* Light theme variables */
@@ -26,8 +26,11 @@
   --glass-background: rgba(255, 255, 255, 0.25);
   --glass-border: rgba(255, 255, 255, 0.18);
   --sidebar-bg: rgba(255, 255, 255, 0.95);
-  --card-bg: rgba(255, 255, 255, 0.4);
+  --card-bg: rgba(255, 255, 255, 0.85);
   --card-border: rgba(148, 163, 184, 0.2);
+  --fire-red-primary: #000000;
+  --fire-red-secondary: #333333;
+  --fire-red-tertiary: #666666;
 }
 
 /* Dark theme variables */
@@ -48,6 +51,9 @@
   --sidebar-bg: #111827;
   --card-bg: #1f2937;
   --card-border: #374151;
+  --fire-red-primary: #ffffff;
+  --fire-red-secondary: #e5e7eb;
+  --fire-red-tertiary: #d1d5db;
 }
 
 @theme inline {
@@ -117,5 +123,82 @@ body {
     background: var(--sidebar-bg);
     backdrop-filter: blur(15px);
     border-right: 1px solid var(--border-color);
+  }
+  
+  /* Force light mode for search containers */
+  .search-container {
+    background-color: white !important;
+    border-color: #e5e7eb !important;
+  }
+  
+  .dark .search-container {
+    background-color: #374151 !important;
+    border-color: #4b5563 !important;
+  }
+  
+  /* Force light styling for specific elements */
+  .force-light-mode {
+    background-color: white !important;
+    border-color: #e5e7eb !important;
+    color: #111827 !important;
+  }
+  
+  /* Override any dark mode detection */
+  .light-mode-container {
+    background-color: white !important;
+    border: 1px solid #e5e7eb !important;
+  }
+  
+  .light-mode-container input {
+    background-color: white !important;
+    border-color: #d1d5db !important;
+    color: #111827 !important;
+  }
+  
+  .light-mode-container label {
+    color: #374151 !important;
+  }
+  
+  .light-mode-container button {
+    color: #374151 !important;
+  }
+  
+  /* Force modal backgrounds to be white */
+  .force-light-mode * {
+    background-color: inherit !important;
+    color: inherit !important;
+  }
+  
+  .force-light-mode input {
+    background-color: white !important;
+    border-color: #d1d5db !important;
+    color: #111827 !important;
+  }
+  
+  .force-light-mode label {
+    color: #374151 !important;
+  }
+  
+  /* Modal specific styles */
+  .modal-container {
+    background-color: white !important;
+    color: #111827 !important;
+  }
+  
+  .dark .modal-container {
+    background-color: #374151 !important;
+    color: white !important;
+  }
+  
+  /* Ensure modals are correctly themed */
+  html.light .modal-container,
+  html:not(.dark) .modal-container {
+    background-color: white !important;
+    color: #111827 !important;
+  }
+  
+  html.dark .modal-container {
+    background-color: #374151 !important;
+    color: white !important;
   }
 }

@@ -58,8 +58,8 @@ const Sidebar = () => {
   return (
     <aside className="w-72 glass-sidebar p-5 flex flex-col h-screen shadow-lg transition-colors duration-300">
       <div className="mb-6 flex items-center justify-between">
-        <Link href="/" className="text-3xl font-bold text-fire-primary hover:text-fire-secondary transition-colors">
-          FeuerDoc
+        <Link href="/" className="text-3xl font-bold text-red-600 hover:text-red-700 transition-colors">
+          Feuerdok
         </Link>
         <ThemeToggle />
       </div>
@@ -97,7 +97,7 @@ const Sidebar = () => {
       </nav>
       <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-800">
         {/* User profile/logout can go here */}
-        <p className="text-xs text-gray-500 dark:text-gray-500 text-center">© {new Date().getFullYear()} FeuerDoc</p>
+        <p className="text-xs text-gray-500 dark:text-gray-500 text-center">© {new Date().getFullYear()} Feuerdok</p>
       </div>
     </aside>
   );
