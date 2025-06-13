@@ -32,7 +32,7 @@ const CaseListView: React.FC<CaseListViewProps> = ({ caseData, onInfoClick, onEd
         {/* Main Content */}
         <div className="flex-1 min-w-0 flex items-center gap-6">
           <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate mb-2" title={caseData.title}>
+            <h3 className="text-lg font-semibold truncate mb-2" title={caseData.title} style={{color: '#000000', fontWeight: 'bold'}}>
               {caseData.title}
             </h3>
             <div className="flex items-center gap-6 text-sm text-gray-600 dark:text-gray-400">
