@@ -12,14 +12,14 @@ interface ViewToggleProps {
 const ViewToggle: React.FC<ViewToggleProps> = ({ viewMode, onViewModeChange }) => {
   return (
     <div 
-      className="flex items-center bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-1.5 shadow-sm backdrop-blur-sm"
+      className="flex items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full p-1 shadow-sm backdrop-blur-sm"
     >
       <button
         onClick={() => onViewModeChange('grid')}
-        className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+        className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
           viewMode === 'grid'
-            ? 'bg-gray-900 dark:bg-white text-white dark:text-black shadow-md transform scale-105'
-            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 hover:scale-105'
+            ? 'bg-gray-900 dark:bg-white text-white dark:text-black shadow-md'
+            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700'
         }`}
         title="Grid view"
       >
@@ -31,10 +31,10 @@ const ViewToggle: React.FC<ViewToggleProps> = ({ viewMode, onViewModeChange }) =
       
       <button
         onClick={() => onViewModeChange('list')}
-        className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+        className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
           viewMode === 'list'
-            ? 'bg-gray-900 dark:bg-white text-white dark:text-black shadow-md transform scale-105'
-            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 hover:scale-105'
+            ? 'bg-gray-900 dark:bg-white text-white dark:text-black shadow-md'
+            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700'
         }`}
         title="List view"
       >
